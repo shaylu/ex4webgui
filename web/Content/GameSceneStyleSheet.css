@@ -1,0 +1,92 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 04-Jul-2015, 18:20:09
+    Author     : Shay
+*/
+
+.column {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.SmallNumber{
+    width: 40px;
+    height: 40px;
+} 
+.MediumNumber{
+    width: 40px;
+    height: 62.5px;
+}  
+.LargeNumber{
+    width: 40px;
+    height: 130px;
+}  
+.VericalSpacer{
+    width: 5px;
+    height: 40px;
+}  
+.SmallVerticalSpacer{
+    width: 5px;
+    height: 17.5px;
+} 
+.HorizontalSpacer{
+    width: 40px;
+    height: 5px;
+}  
+.CornerSpacer{
+    width: 5px;
+    height: 5px;
+}  
+.MediumHorizontalSpacer{
+    width: 85px;
+    height: 5px;
+
+}  
+.LargeHorizontalSpacer{
+    width: 175px;
+    height: 40px;
+} 
+
+.LargeHorizontalNumber{
+    width: 175px;
+    height: 40px;
+} 
+
+.MediumHorizontalNumber{
+    width: 85px;
+    height: 40px;
+}
+
+.Red{
+    color: black;
+    background-color: red;
+} 
+.Black{
+    color: white;
+    background-color: black;
+} 
+.Green{
+    color: white;
+    background-color: green;
+} 
+.Transparent{
+    background-color: orange;
+}
+
+.hotspot {
+    vertical-align: middle;
+    text-align: center;
+    line-height: 40px;
+    font-family: 'Open Sans', sans-serif;
+    cursor: pointer;
+}
+div.ExtraButtons:not(:first-child) {
+    margin-top: 5px;
+}
+.ExtraButtons .hotspot {
+    display: inline-block;
+}
