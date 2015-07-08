@@ -5,22 +5,28 @@
  */
 package game.servlets;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ws.roulette.RouletteType;
-import game.ui.UITable;
+import server.json.JsonMessage;
+import ws.roulette.RouletteWebServiceService;
+import game.Constsants;
+import java.net.URL;
+import game.util.RouletteService;
+import ws.roulette.GameDetails;
+import ws.roulette.RouletteWebService;
 
 /**
  *
- * @author Shay
+ * @author Dell
  */
-public class game extends HttpServlet {
-
-    UITable creator = new UITable(RouletteType.AMERICAN);
+@WebServlet(name = "gamedata", urlPatterns = {"/gamedata"})
+public class gamedata extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,22 +39,23 @@ public class game extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>");
-            out.println("<link href=\"Content/GameSceneStyleSheet.css\" rel=\"stylesheet\" />");
-            out.println("<title>Servlet game</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println(creator.createHTML());
-            out.println("<script src='Scripts/jquery-2.1.4.js'></script>");
-            out.println("<script src='Scripts/GameScene.js'></script>");
-            out.println("</body>");
-            out.println("</html>");
+            try {
+                String type = request.getParameter("type").toString();
+                String res = "";
+                Gson gson = new Gson();
+                switch (type) {
+                    case "gameDetails":
+                        out.println(gson.toJson(getGameDetails()));;
+                        break;
+                    default:
+                        out.print(new JsonMessage(JsonMessage.Status.Error, "No return data was given."));
+                        break;
+                }
+            } catch (Exception e) {
+                out.print(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
+            }
         }
     }
 
@@ -90,5 +97,16 @@ public class game extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private GameDetails getGameDetails() {
+
+        try {
+            RouletteWebService service = RouletteService.getService();
+            GameDetails gameDetails = service.getGameDetails("");
+            return gameDetails;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 }

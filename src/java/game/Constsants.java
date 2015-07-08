@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.models;
+package game;
 
 /**
  *
- * @author Shay
+ * @author Dell
  */
-public class Consts {
-    public static class Connections {
-        public static final String WSDL_URL = "WSDLUrl";
-    }
+public class Constsants {
+    public static String SERVICE_URL = "http://localhost:8080/RouletteEX4Web/RouletteWebServiceService?wsdl"; 
 }

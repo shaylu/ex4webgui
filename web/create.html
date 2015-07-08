@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <div>
+            <div id="ajaxMessage"></div>
+            <div id="divNewGameSettings" class="SettingsDIV">
+                <h4>Create a new game using these settings:</h4>
+                <form id="frmNewGameSettings" name="frmNewGameSettings" method="post" action="/newgame">
+                    <div><label for="txtGameName">Game Name:</label><input type="text" name="txtGameName" value="New Game" /></div>
+                    <div><label for="rdRouletteType">Roulette Type:</label><input type="radio" name="rdRouletteType" value="American" checked /> American <input type="radio" name="rdRouletteType" value="French" /> French</div>
+                    <div>
+                        <label for="cmbHumanPlayers">Human Players:</label>
+                        <select name="cmbHumanPlayers">
+                            <option selected>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="cmbComputerPlayers">Computer Players:</label>
+                        <select name="cmbComputerPlayers">
+                            <option selected>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="txtAmountOfMoney">Initial Money</label><input type="number" name="txtAmountOfMoney" min="1" max="100" value="100" />
+                    </div>
+                    <div>
+                        <label for="txtMinBetsPerPlayer">Minimum Bets</label><input type="number" name="txtMinBetsPerPlayer" min="0" max="1" value="0"/>
+                    </div>
+                    <div>
+                        <label for="txtMaxBetsPerPlayer">Maximum Bets</label><input type="number" name="txtMaxBetsPerPlayer" min="0" max="10" value="5"/>
+                    </div>
+                    <div>
+                        <input type="submit" value="Submit" />
+                    </div>
+                </form>
+            </div>
+            <div id="divNewGameFromXML" class="SettingsDIV">
+                <h4>Or, Set up a new game from XML file</h4>
+                <form name="frmNewGameFromXML" method="post" action="/newgame" enctype="multipart/form-data">
+                    <div><input type="file" name="fileXMLFile" accept=".xml" /></div>
+                    <div><input type="submit" value="Submit" /></div>
+                </form>
+            </div>
+        </div>
+        <script src="Scripts/jquery-2.1.4.js"></script>
+        <script>
+            $(function () {
+                var setAjaxMessage = function(text){
+                    var $ajaxMessage = $("#ajaxMessage");
+                    $ajaxMessage.text(text);
+                };
+                
+                $('#frmNewGameSettings').submit(function (e) {
+                    $.ajax({url: '/RouletteEX4WebGUI/newgame', data: $('#frmNewGameSettings').serialize()})
+                            .success(function (data) {
+                                var status = data.status;
+                                var message = data.message;
+                                if (status === "Success"){
+                                    if (message !== undefined){
+                                        setAjaxMessage(message);
+                                    }
+                                }
+                                else {
+                                    if (message !== undefined){
+                                        setAjaxMessage(message);
+                                    }
+                                }
+                            })
+                            .error(function () {
+                                setAjaxMessage("Failed to make AJAX call. ")
+                            });
+                            return false;
+                });
+            });
+        </script>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+            <style>
+                .SettingsDIV {
+                    padding: 10px;
+                    font-family: 'Open Sans', sans-serif;
+                    width: 50%;
+                    display: inline-block;
+                    float: left;
+                    box-sizing: border-box;
+                }
+
+                .SettingsDIV:last-of-type {
+                    margin-right: 0;
+                }
+
+                .SettingsDIV label {
+                    margin-right: 10px;
+                    width: 150px;
+                    max-width: 150px;
+                    display: inline-block;
+                }
+
+                .SettingsDIV form > div {
+                    line-height: 40px;
+                }
+            </style>
+    </body>
+</html>

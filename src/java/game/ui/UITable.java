@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.ui.table;
+package game.ui;
 
 import java.util.Arrays;
 import ws.roulette.BetType;
@@ -13,13 +13,13 @@ import ws.roulette.RouletteType;
  *
  * @author Shay
  */
-public class TableCreator {
+public class UITable {
 
     public static final String COLUMN_CLASS = "column";
 
     RouletteType type;
 
-    public TableCreator(RouletteType type) {
+    public UITable(RouletteType type) {
         this.type = type;
     }
 
