@@ -85,12 +85,22 @@ public class game extends HttpServlet {
 
     private void printGame(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
         printTopHTML(request, response, out);
-        out.println("");
         out.println("<div class='container'>");
+        out.println("   <div class='row gap'><button id=''>Get Events</button></div>");
+        out.println("   <div class='row'><div class='panel-body'><div class='players-div'></div></div></div>");
         out.println("   <div class='row'>");
-        out.println("       <div class='panel panel-default'><div class='table-div inline'>" + creator.createHTML() + "</div><div class='roulette-div inline'><img src='Content/americanRoulette.gif' height=225 /></div></div>");
-
-        out.println("   </div>");
+        out.println("       <div class='panel panel-body'>"
+                + "             <div class='table-div inline'>"
+                + "             " + creator.createHTML()
+                + "              </div>"
+                + "              <div class='roulette-div inline'>"
+                + "                 <img src='Content/americanRoulette.gif' height=225 />"
+                + "              </div>"
+                + "         </div>"
+                + "     </div>");
+        out.println("   <div class='row'>"
+                + "         <textarea id='txtLog'></textarea>"
+                + "     </div>");
         out.println("</div>");
         printScripts(request, response, out);
         printBottomHTML(request, response, out);

@@ -8,6 +8,11 @@ and open the template in the editor.
     Author     : Shay
 */
 
+.gap {
+    height: 50px;
+    display: block;
+}
+
 .table-div, .roulette-div {
     display: inline-block;
     float: left;

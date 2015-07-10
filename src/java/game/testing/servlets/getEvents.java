@@ -3,28 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.servlets;
+package game.testing.servlets;
 
+import com.google.gson.Gson;
+import game.util.RouletteService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import game.util.GameUtils;
-import game.util.RouletteService;
-import java.net.MalformedURLException;
 import server.json.JsonMessage;
+import ws.roulette.Event;
+import ws.roulette.GameDetails;
 import ws.roulette.RouletteWebService;
-import game.Constsants;
 
 /**
  *
- * @author Dell
+ * @author Shay
  */
-@WebServlet(name = "joingame", urlPatterns = {"/joingame"})
-public class joingame extends HttpServlet {
+@WebServlet(name = "getEvents", urlPatterns = {"/tests/getEvents"})
+public class getEvents extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,29 +38,14 @@ public class joingame extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
-            if (GameUtils.canJoinGame() == true) {
-                if (request.getSession().getAttribute(Constsants.SESSION_PLAYER_NAME) != null) {
-                    out.println(new JsonMessage(JsonMessage.Status.Error, "already joined as a player."));
-                    return;
-                } else {
-                    String name = request.getParameter("name");
-                    try {
-                        int playerID = joinGame(name);
-                        request.getSession(true).setAttribute(Constsants.SESSION_PLAYER_NAME, name);
-                        request.getSession(true).setAttribute(Constsants.SESSION_PLAYER_ID, playerID);
-                        out.println(new JsonMessage(JsonMessage.Status.Success, "You joined the game."));
-                        return;
-                    } catch (Exception e) {
-                        out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
-                        return;
-                    }
-                }
-            } else {
-                out.println(new JsonMessage(JsonMessage.Status.Error, "Can't join game."));
-                return;
+            try {
+                RouletteWebService service = RouletteService.getService();
+                List<Event> events = service.getEvents(0, 3);
+                out.println(new Gson().toJson(events));
+            } catch (Exception e) {
+                out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
             }
         }
     }
@@ -102,10 +88,5 @@ public class joingame extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-    private int joinGame(String name) throws Exception {
-        RouletteWebService service = RouletteService.getService();
-        return service.joinGame("", name);
-    }
 
 }

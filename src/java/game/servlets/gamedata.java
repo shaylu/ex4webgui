@@ -18,7 +18,11 @@ import ws.roulette.RouletteWebServiceService;
 import game.Constsants;
 import java.net.URL;
 import game.util.RouletteService;
+import java.util.ArrayList;
+import java.util.List;
+import ws.roulette.Event;
 import ws.roulette.GameDetails;
+import ws.roulette.PlayerDetails;
 import ws.roulette.RouletteWebService;
 
 /**
@@ -40,6 +44,9 @@ public class gamedata extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json; charset=UTF-8");
+
+        String json;
+
         try (PrintWriter out = response.getWriter()) {
             try {
                 String type = request.getParameter("type").toString();
@@ -49,13 +56,22 @@ public class gamedata extends HttpServlet {
                 switch (type) {
                     case "gameDetails":
                         GameDetails gameDetails = getGameDetails();
-                        String json;
-                        if (gameDetails != null)
+                        if (gameDetails != null) {
                             json = gson.toJson(gameDetails);
-                        else {
+                        } else {
                             json = new JsonMessage(JsonMessage.Status.Error, "Game isn't initialized yet.").toString();
                         }
                         out.println(json);
+                        break;
+                    case "events":
+                        int playerID = (int) request.getSession(true).getAttribute(Constsants.SESSION_PLAYER_ID);
+                        int lastProccessedID = Integer.parseInt(request.getParameter("lastID"));
+                        List<Event> events = getEvents(lastProccessedID, playerID);
+                        json = gson.toJson(events);
+                        out.println(json);
+                        break;
+                    case "players":
+                        List<PlayerDetails> playersDetails = getPlayersDetails();
                         break;
                     default:
                         out.print(new JsonMessage(JsonMessage.Status.Error, "No return data was given."));
@@ -117,4 +133,21 @@ public class gamedata extends HttpServlet {
         }
     }
 
+    private List<Event> getEvents(int lastProccessedID, int playerID) {
+        try {
+            RouletteWebService service = RouletteService.getService();
+            return service.getEvents(lastProccessedID, playerID);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    private List<PlayerDetails> getPlayersDetails() {
+        try {
+            RouletteWebService service = RouletteService.getService();
+            return service.getPlayersDetails("");
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
 }
