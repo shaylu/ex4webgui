@@ -8,6 +8,11 @@ and open the template in the editor.
     Author     : Shay
 */
 
+.table-div, .roulette-div {
+    display: inline-block;
+    float: left;
+    padding: 10px;
+}
 .column {
     display: inline-block;
     vertical-align: top;

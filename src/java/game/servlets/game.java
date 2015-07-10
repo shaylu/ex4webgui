@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ws.roulette.RouletteType;
 import game.ui.UITable;
+import game.Constsants;
 
 /**
  *
@@ -35,20 +36,11 @@ public class game extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>");
-            out.println("<link href=\"Content/GameSceneStyleSheet.css\" rel=\"stylesheet\" />");
-            out.println("<title>Servlet game</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println(creator.createHTML());
-            out.println("<script src='Scripts/jquery-2.1.4.js'></script>");
-            out.println("<script src='Scripts/GameScene.js'></script>");
-            out.println("</body>");
-            out.println("</html>");
+            if (request.getSession().getAttribute(Constsants.SESSION_PLAYER_NAME) != null) {
+                printGame(request, response, out);
+            } else {
+                response.sendRedirect("index.html");
+            }
         }
     }
 
@@ -90,5 +82,43 @@ public class game extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void printGame(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+        printTopHTML(request, response, out);
+        out.println("");
+        out.println("<div class='container'>");
+        out.println("   <div class='row'>");
+        out.println("       <div class='panel panel-default'><div class='table-div inline'>" + creator.createHTML() + "</div><div class='roulette-div inline'><img src='Content/americanRoulette.gif' height=225 /></div></div>");
+
+        out.println("   </div>");
+        out.println("</div>");
+        printScripts(request, response, out);
+        printBottomHTML(request, response, out);
+    }
+
+    private void printTopHTML(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Roulette Game</title>");
+        out.println("<meta name='viewport' content='width=device-width, initial-scale=1.0'>");
+        out.println("<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>");
+        out.println("<link href='Content/bootstrap.css' rel='stylesheet' type='text/css'/>");
+        out.println("<link href='Content/GameSceneStyleSheet.css' rel='stylesheet' type='text/css'/>");
+        out.println("<link href='Content/roulette.css' rel='stylesheet' type='text/css'/>");
+        out.println("</head>");
+        out.println("<body>");
+    }
+
+    private void printScripts(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+        out.println("<script src='Scripts/jquery-2.1.4.js' type='text/javascript'></script>");
+        out.println("<script src='Scripts/bootstrap.js' type='text/javascript'></script>");
+        out.println("<script src='Scripts/jquery.rotate.1-1.js' type='text/javascript'></script>");
+        out.println("<script src='Scripts/GameScene.js' type='text/javascript'></script>");
+    }
+
+    private void printBottomHTML(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+        out.println("</body>");
+        out.println("</html>");
+    }
 
 }

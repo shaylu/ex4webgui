@@ -18,6 +18,14 @@ and open the template in the editor.
                 <div class="panel panel-default">
                     <div class="panel-heading">Active Game <button id="btnRefreshGameDetails">Refresh</button></div>
                     <div id="gameDetails" class="panel-body"></div>
+                    <div id="joinGame" class="panel-body" style="display: none;">
+                        <h4>Join Game</h4>
+                        <form action="/joingame" method="POST" id="frmJoinGame">
+                            <div><label for="txtPlayerName">Name</label><input id="txtPlayerName" name="txtPlayerName" type="text" value="Name"><input type="submit" value="Join" /></div>
+                            <div id="joinError" style="display: none;"></div>
+                            
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

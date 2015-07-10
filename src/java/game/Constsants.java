@@ -11,4 +11,5 @@ package game;
  */
 public class Constsants {
     public static String SERVICE_URL = "http://localhost:8080/RouletteEX4Web/RouletteWebServiceService?wsdl"; 
+    public static String SESSION_PLAYER_NAME = "sessionPlayerName";
 }

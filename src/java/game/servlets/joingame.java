@@ -5,7 +5,6 @@
  */
 package game.servlets;
 
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -13,20 +12,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import server.json.JsonMessage;
-import ws.roulette.RouletteWebServiceService;
-import game.Constsants;
-import java.net.URL;
+import game.util.GameUtils;
 import game.util.RouletteService;
-import ws.roulette.GameDetails;
+import java.net.MalformedURLException;
+import server.json.JsonMessage;
 import ws.roulette.RouletteWebService;
+import game.Constsants;
 
 /**
  *
  * @author Dell
  */
-@WebServlet(name = "gamedata", urlPatterns = {"/gamedata"})
-public class gamedata extends HttpServlet {
+@WebServlet(name = "joingame", urlPatterns = {"/joingame"})
+public class joingame extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,30 +37,28 @@ public class gamedata extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/json; charset=UTF-8");
+
+        response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
-            try {
-                String type = request.getParameter("type").toString();
-                System.out.println("type: " + type);
-                String res = "";
-                Gson gson = new Gson();
-                switch (type) {
-                    case "gameDetails":
-                        GameDetails gameDetails = getGameDetails();
-                        String json;
-                        if (gameDetails != null)
-                            json = gson.toJson(gameDetails);
-                        else {
-                            json = new JsonMessage(JsonMessage.Status.Error, "Game isn't initialized yet.").toString();
-                        }
-                        out.println(json);
-                        break;
-                    default:
-                        out.print(new JsonMessage(JsonMessage.Status.Error, "No return data was given."));
-                        break;
+            if (GameUtils.canJoinGame() == true) {
+                if (request.getSession().getAttribute(Constsants.SESSION_PLAYER_NAME) != null) {
+                    out.println(new JsonMessage(JsonMessage.Status.Error, "already joined as a player."));
+                    return;
+                } else {
+                    String name = request.getParameter("name");
+                    try {
+                        joinGame(name);
+                        request.getSession(true).setAttribute(Constsants.SESSION_PLAYER_NAME, name);
+                        out.println(new JsonMessage(JsonMessage.Status.Success, "You joined the game."));
+                        return;
+                    } catch (Exception e) {
+                        out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
+                        return;
+                    }
                 }
-            } catch (Exception e) {
-                out.print(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
+            } else {
+                out.println(new JsonMessage(JsonMessage.Status.Error, "Can't join game."));
+                return;
             }
         }
     }
@@ -106,15 +102,9 @@ public class gamedata extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private GameDetails getGameDetails() {
-
-        try {
-            RouletteWebService service = RouletteService.getService();
-            GameDetails gameDetails = service.getGameDetails("");
-            return gameDetails;
-        } catch (Exception e) {
-            return null;
-        }
+    private void joinGame(String name) throws Exception {
+        RouletteWebService service = RouletteService.getService();
+        service.joinGame("", name);
     }
 
 }
