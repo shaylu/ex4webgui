@@ -36,7 +36,7 @@ public class game extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if (request.getSession().getAttribute(Constsants.SESSION_PLAYER_NAME) != null) {
+            if (request.getSession().getAttribute(Constsants.SESSION_PLAYER_NAME) != null && request.getSession().getAttribute(Constsants.SESSION_PLAYER_ID) != null) {
                 printGame(request, response, out);
             } else {
                 response.sendRedirect("index.html");

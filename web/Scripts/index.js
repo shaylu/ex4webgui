@@ -6,41 +6,43 @@
 
 var $errorDiv = $('#joinError');
 var $joinDiv = $('#joinGame');
+var waitingGamesIntervals;
 
-
-var canCreateAGame = function (){
+var canCreateAGame = function () {
     var url = 'tests/getGameDetails';
     $.ajax({
         url: url
     }).success(function (data) {
+        var res;
+        
         if (data.status !== 'Error') {
             // a game is initialized
             var status = data.status;
             if (status === 'FINISHED')
-                return true;
-            else 
-                return false;
+                res = true;
+            else
+                res = false;
         }
         else {
-            return true;
-        };
+            res = true;
+        }
+        
+        if (res === true) {
+            $('#gameDetails').text("No waiting games but you can create one!");
+        }
+        else {
+            $('#gameDetails').text("No waiting games, please wait for a game to finish.");
+        }
+
+        $joinDiv.hide();
     });
 };
-
 
 var getWaitingGames = function () {
     var url = 'tests/getWaitingGames';
 
     var noWaitingGames = function () {
-        var canUserCreateNewGame = canCreateAGame();
-        if (canUserCreateNewGame === true){
-            $('#gameDetails').text("No waiting games but you can create one!");
-        }
-        else {
-             $('#gameDetails').text("No waiting games, please wait for a game to finish.");
-        }
-        
-        $joinDiv.hide();
+        canCreateAGame();
     };
 
     var waitingGameExist = function () {
@@ -57,20 +59,31 @@ var getWaitingGames = function () {
         }
         else {
             waitingGameExist();
-        };
+        }
+        ;
     });
 };
 
-$(document).ready(function () {
-    var waitingGamesIntervals = setInterval(getWaitingGames, 5000);
-    getWaitingGames();
+var joinGame = function (name){
+    var url = 'tests/joinGame';
     
-//
-//    $('#frmJoinGame').submit(function () {
-//        var name = $('#txtPlayerName').val();
-//        joinGame(name);
-//        return false;
-//    });
+    $.ajax({
+        url: url,
+        data: { 'name' : name}
+    }).success(function (data) {
+        
+    });
+}
+
+$(document).ready(function () {
+    waitingGamesIntervals = setInterval(getWaitingGames, 5000);
+    getWaitingGames();
+
+    $('#frmJoinGame').submit(function () {
+        var name = $('#txtPlayerName').val();
+        joinGame(name);
+        return false;
+    });
 //
 //    $('#btnRefreshGameDetails').on('click', function () {
 //        getGameDetails();

@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import server.json.JsonMessage;
 import ws.roulette.GameDetails;
 import ws.roulette.RouletteWebService;
+import game.Constsants;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,9 +41,25 @@ public class joinGame extends HttpServlet {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
             try {
+                if (request.getParameter("name") == null){
+                    out.println(new JsonMessage(JsonMessage.Status.Error, "No name given."));
+                    return;
+                }
+                
+                String name = request.getParameter("name");
+                
+                HttpSession session = request.getSession(true);
+                if (session.getAttribute(Constsants.SESSION_PLAYER_NAME) != null){
+                    out.println(new JsonMessage(JsonMessage.Status.Error, "Player already in game."));
+                    return;
+                }
+
                 RouletteWebService service = RouletteService.getService();
-                int id = service.joinGame("", "Shay");
-                out.println(new Gson().toJson(id));
+                int id = service.joinGame("", name);
+                session.setAttribute(Constsants.SESSION_PLAYER_NAME, name);
+                session.setAttribute(Constsants.SESSION_PLAYER_ID, id);
+                
+                out.println(new JsonMessage(JsonMessage.Status.Success, "Player joined a game."));
             } catch (Exception e) {
                 out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
             }

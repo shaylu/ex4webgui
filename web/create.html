@@ -8,6 +8,7 @@ and open the template in the editor.
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title></title>
+        <link href="Content/bootstrap.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <div>
@@ -65,23 +66,26 @@ and open the template in the editor.
         <script src="Scripts/jquery-2.1.4.js"></script>
         <script>
             $(function () {
-                var setAjaxMessage = function(text){
-                    var $ajaxMessage = $("#ajaxMessage");
+                var $ajaxMessage = $("#ajaxMessage");
+                
+                var setAjaxMessage = function (text) {
                     $ajaxMessage.text(text);
                 };
-                
+
                 $('#frmNewGameSettings').submit(function (e) {
                     $.ajax({url: '/RouletteEX4WebGUI/newgame', data: $('#frmNewGameSettings').serialize()})
                             .success(function (data) {
                                 var status = data.status;
                                 var message = data.message;
-                                if (status === "Success"){
-                                    if (message !== undefined){
+                                if (status === "Success") {
+                                    if (message !== undefined) {
+                                        $ajaxMessage.addClass("alert alert-success");
                                         setAjaxMessage(message);
                                     }
                                 }
                                 else {
-                                    if (message !== undefined){
+                                    if (message !== undefined) {
+                                        $ajaxMessage.addClass("alert alert-danger");
                                         setAjaxMessage(message);
                                     }
                                 }
@@ -89,11 +93,12 @@ and open the template in the editor.
                             .error(function () {
                                 setAjaxMessage("Failed to make AJAX call. ")
                             });
-                            return false;
+                    return false;
                 });
             });
         </script>
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+            <script src="Scripts/bootstrap.js" type="text/javascript"></script>
             <style>
                 .SettingsDIV {
                     padding: 10px;
