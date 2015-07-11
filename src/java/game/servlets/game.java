@@ -87,7 +87,7 @@ public class game extends HttpServlet {
     private void printGame(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
         printTopHTML(request, response, out);
         out.println("<div class='container'>");
-        out.println("   <div class='row gap'><button id='getEvents'>Get Events</button></div>");
+        out.println("   <div class='row gap'><button id='getEvents'>Get Events</button> <a href='index.html'>Home</a></div>");
         
         // ============ GAME AREA ======================
         out.println("<div class='game-area' style='display: none;'>");
@@ -104,6 +104,7 @@ public class game extends HttpServlet {
                 + "     </div>");
         out.println("       <div class='panel panel-body'>"
                 + "             <button id='resign'>Resign</button>"
+                + "             <div class='coin1'><img src='content/blue_chip.png' /></div>"
                 + "         </div>");
         out.println("   <div class='row'>"
                 + "         <textarea id='txtLog'></textarea>"

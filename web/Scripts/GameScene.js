@@ -11,6 +11,7 @@ var $scoreboardArea = $('.scoreboard-area');
 var $timerDiv = $('.timer');
 var game = new GameData($logTextarea);
 var timer = undefined;
+var eventsIntervals;
 
 function TimeSpan(ghours, gminutes, gseconds) {
     this.hours = ghours;
@@ -75,12 +76,14 @@ function Timer(millseconds, div) {
     this.intervals = undefined;
 
     this.start = function () {
-        var tick = function (timer) {
+        var tick = function () {
             timer.timespan.tickDown();
             $(timer.div).text(timer.timespan.getTimeString());
         };
 
-        this.intervals = setInterval(tick(this), 1000);
+        this.intervals = setInterval(function () {
+            tick();
+        }, 1000);
     };
 
     this.stop = function () {
@@ -93,6 +96,7 @@ function GameData(logTextarea) {
     this.log = logTextarea;
     this.lastHandledEvent = 0;
     this.roundsTime = 0;
+    this.boardInitialized = false;
     this.getPlayer = function (name) {
         var searchfor = name;
         var res = $.grep(this.players, function (elm) {
@@ -144,32 +148,32 @@ processEvent = function (gamedata, event) {
     var type = event.type;
     switch (type) {
         case 'GAME_START':
-            gameStarted(gamedata, event);
             gamedata.lastHandledEvent = event.id;
+            gameStarted(gamedata, event);
             break;
         case 'GAME_OVER':
-            gameOver(gamedata);
             gamedata.lastHandledEvent = event.id;
+            gameOver(gamedata);
             break;
         case 'WINNING_NUMBER':
-            winningNumber(event.winningNumber);
             gamedata.lastHandledEvent = event.id;
+            winningNumber(event.winningNumber);
             break;
         case 'RESULTS_SCORES':
-            playerWon(gamedata, event);
             gamedata.lastHandledEvent = event.id;
+            playerWon(gamedata, event);
             break;
         case 'PLAYER_RESIGNED':
-            playerResigned(gamedata, event);
             gamedata.lastHandledEvent = event.id;
+            playerResigned(gamedata, event);
             break;
         case 'PLAYER_BET':
-            playerBet(gamedata, event);
             gamedata.lastHandledEvent = event.id;
+            playerBet(gamedata, event);
             break;
         case 'PLAYER_FINISHED_BETTING':
-            playerFinishedBetting(gamedata);
             gamedata.lastHandledEvent = event.id;
+            playerFinishedBetting(gamedata);
             break;
         default:
             break;
@@ -197,23 +201,28 @@ var gameStarted = function (gamedata, event) {
     // get and create players on UI
     var url = 'tests/getPlayersDetails';
     $.ajax({url: url}).success(function (playersDetails) {
-        for (var i = 0, max = playersDetails.length; i < max; i++) {
-            // create player and add to game data
-            var name = playersDetails[i].name;
-            var money = playersDetails[i].money;
-            var player = new Player(name, money);
-            gamedata.players[i] = player;
+        if (gamedata.boardInitialized === false) {
+            for (var i = 0, max = playersDetails.length; i < max; i++) {
+                // create player and add to game data
+                var name = playersDetails[i].name;
+                var money = playersDetails[i].money;
+                var player = new Player(name, money);
+                gamedata.players[i] = player;
+            }
+            // finally after adding all players, create their UI
+            createPlayersOnUI(gamedata.players);
+            gamedata.boardInitialized = true;
         }
 
-        // finally after adding all players, create their UI
-        createPlayersOnUI(gamedata.players);
         log("Game Started!");
         startTimer();
     });
 };
 var gameOver = function (gamedata) {
 
+    clearInterval(eventsIntervals);
     stopTimer();
+
     var scoreboard = HTMLHelper.scoreBoardHTML(gamedata);
     $gameArea.hide();
     // TO DO
@@ -238,8 +247,6 @@ var winningNumber = function (winningNumber) {
 
     log("Winning number is: " + winningNumber);
     // clear all bets
-
-    startTimer();
 };
 var playerWon = function (gamedata, winningdata) {
     var name = winningdata.playerName;
@@ -304,12 +311,16 @@ $(function () {
         console.log(bettype + " " + numbers);
         alert(bettype + " " + numbers);
     });
+
     $('#getEvents').click(function () {
         getEvents(game);
     });
-
     $('#resign').click(function () {
         resign();
     });
+
+    eventsIntervals = setInterval(function () {
+        getEvents(game);
+    }, 1000);
 });
 
