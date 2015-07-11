@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import ws.roulette.RouletteType;
 import game.ui.UITable;
 import game.Constsants;
+import game.util.GameUtils;
 
 /**
  *
@@ -36,7 +37,7 @@ public class game extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if (request.getSession().getAttribute(Constsants.SESSION_PLAYER_NAME) != null && request.getSession().getAttribute(Constsants.SESSION_PLAYER_ID) != null) {
+            if (GameUtils.isUserPlaying(request) == true) {
                 printGame(request, response, out);
             } else {
                 response.sendRedirect("index.html");
@@ -86,7 +87,10 @@ public class game extends HttpServlet {
     private void printGame(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
         printTopHTML(request, response, out);
         out.println("<div class='container'>");
-        out.println("   <div class='row gap'><button id=''>Get Events</button></div>");
+        out.println("   <div class='row gap'><button id='getEvents'>Get Events</button></div>");
+        
+        // ============ GAME AREA ======================
+        out.println("<div class='game-area' style='display: none;'>");
         out.println("   <div class='row'><div class='panel-body'><div class='players-div'></div></div></div>");
         out.println("   <div class='row'>");
         out.println("       <div class='panel panel-body'>"
@@ -96,11 +100,22 @@ public class game extends HttpServlet {
                 + "              <div class='roulette-div inline'>"
                 + "                 <img src='Content/americanRoulette.gif' height=225 />"
                 + "              </div>"
-                + "         </div>"
+                + "         </div><h3 class='timer'></h3>"
                 + "     </div>");
+        out.println("       <div class='panel panel-body'>"
+                + "             <button id='resign'>Resign</button>"
+                + "         </div>");
         out.println("   <div class='row'>"
                 + "         <textarea id='txtLog'></textarea>"
                 + "     </div>");
+        out.println("</div>");
+        // ============ END GAME AREA ===================
+
+        // ============ SCORE BOARD AREA ================
+        out.println("<div class='scoreboard-area' style='display: none;'>");
+        out.println("</div>");
+        // ============ END SCORE BOARD AREA ============
+
         out.println("</div>");
         printScripts(request, response, out);
         printBottomHTML(request, response, out);

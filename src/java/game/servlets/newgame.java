@@ -91,7 +91,7 @@ public class newgame extends HttpServlet {
             URL url = new URL(Constsants.SERVICE_URL);
             RouletteWebServiceService service = new RouletteWebServiceService(url);
             RouletteWebService context = service.getRouletteWebServicePort();
-            context.createGame(computerPlayers, humanPlayers, initMoney, minBets, maxBets, name, type);
+            context.createGame(computerPlayers, humanPlayers, initMoney, maxBets, minBets, name, type);
         } catch (Exception e) {
             message = new JsonMessage(JsonMessage.Status.Error, e.getMessage());
             response.setContentType("application/json; charset=UTF-8");

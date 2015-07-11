@@ -13,6 +13,10 @@ and open the template in the editor.
     display: block;
 }
 
+.player-resigned {
+    opacity: 0.5;
+}
+
 .table-div, .roulette-div {
     display: inline-block;
     float: left;

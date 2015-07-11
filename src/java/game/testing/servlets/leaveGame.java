@@ -5,8 +5,6 @@
  */
 package game.testing.servlets;
 
-import game.util.GameUtils;
-import game.util.RouletteService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -14,16 +12,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import server.json.JsonMessage;
-import ws.roulette.RouletteType;
-import ws.roulette.RouletteWebService;
+import game.util.GameUtils;
 
 /**
  *
  * @author Shay
  */
-@WebServlet(name = "resign", urlPatterns = {"/tests/resign"})
-public class resign extends HttpServlet {
+@WebServlet(name = "leaveGame", urlPatterns = {"/tests/leaveGame"})
+public class leaveGame extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,13 +34,8 @@ public class resign extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
-            try {
-                RouletteWebService service = RouletteService.getService();
-                service.resign(GameUtils.getPlayerID(request));
-                out.println(new JsonMessage(JsonMessage.Status.Success,""));
-            } catch (Exception e) {
-                out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
-            }
+            /* TODO output your page here. You may use following sample code. */
+            GameUtils.leaveGame(request);
         }
     }
 

@@ -6,6 +6,7 @@
 package game.testing.servlets;
 
 import com.google.gson.Gson;
+import game.util.GameUtils;
 import game.util.RouletteService;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,9 +41,29 @@ public class getEvents extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
+            boolean userPlaying = GameUtils.isUserPlaying(request);
+            if (userPlaying != true){
+                out.println(new JsonMessage(JsonMessage.Status.Error, "User not playing."));
+                return;
+            }
+            
+            int lastID;
+            String lastIDString = request.getParameter("lastID");
+            if (lastIDString == null)
+            {
+//                 out.println(new JsonMessage(JsonMessage.Status.Error, "no given last id."));
+//                return;
+                lastID = 0;
+            }
+            else {
+                lastID = Integer.parseInt(lastIDString);
+            }
+            
+            int playerID = GameUtils.getPlayerID(request);
+            
             try {
                 RouletteWebService service = RouletteService.getService();
-                List<Event> events = service.getEvents(0, 3);
+                List<Event> events = service.getEvents(lastID, playerID);
                 out.println(new Gson().toJson(events));
             } catch (Exception e) {
                 out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));

@@ -5,6 +5,10 @@
  */
 package game.util;
 
+import game.Constsants;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import server.json.JsonMessage;
 import ws.roulette.GameDetails;
 import ws.roulette.GameStatus;
 
@@ -28,5 +32,34 @@ public class GameUtils {
         }
 
         return res;
+    }
+
+    public static boolean isUserPlaying(HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        if (session.getAttribute(Constsants.SESSION_PLAYER_NAME) != null && session.getAttribute(Constsants.SESSION_PLAYER_ID) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static String getPlayerName(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return session.getAttribute(Constsants.SESSION_PLAYER_NAME).toString();
+    }
+
+    public static int getPlayerID(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session != null && session.getAttribute(Constsants.SESSION_PLAYER_ID) != null) {
+            return Integer.parseInt(session.getAttribute(Constsants.SESSION_PLAYER_ID).toString());
+        } else {
+            return 0;
+        }
+    }
+
+    public static void leaveGame(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute(Constsants.SESSION_PLAYER_NAME, null);
+        session.setAttribute(Constsants.SESSION_PLAYER_ID, null);
     }
 }

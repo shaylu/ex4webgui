@@ -71,9 +71,9 @@ var joinGame = function (name){
         url: url,
         data: { 'name' : name}
     }).success(function (data) {
-        
+        window.location = 'game';
     });
-}
+};
 
 $(document).ready(function () {
     waitingGamesIntervals = setInterval(getWaitingGames, 5000);
