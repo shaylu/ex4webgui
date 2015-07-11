@@ -291,6 +291,7 @@ var playerBet = function (gamedata, betdata) {
         var player = game.getPlayer(betdata.playerName);
         if (player !== undefined) {
             var newAmount = player.money - betdata.amount;
+            player.money = newAmount;
             player.updateMoneyOnUI(newAmount);
         }
     }

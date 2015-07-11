@@ -54,7 +54,7 @@ public class makeBet extends HttpServlet {
                 ws.roulette.BetType betType =  ws.roulette.BetType.fromValue(request.getParameter("betType"));
                 
                 ArrayList<Integer> numbers = new ArrayList<>();
-                if (request.getParameter("numbers") != null){
+                if (request.getParameter("numbers") != ""){
                     String[] split = request.getParameter("numbers").split(",");
                     for (String num : split) {
                         numbers.add(Integer.parseInt(num));
