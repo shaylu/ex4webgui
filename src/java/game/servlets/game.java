@@ -90,7 +90,7 @@ public class game extends HttpServlet {
         out.println("   <div class='row gap'><button id='getEvents'>Get Events</button> <a href='index.html'>Home</a></div>");
         
         // ============ GAME AREA ======================
-        out.println("<div class='game-area' style='display: none;'>");
+        out.println("<div class='game-area' style='display: none;' data-playername='" + GameUtils.getPlayerName(request) +"'>");
         out.println("   <div class='row'><div class='panel-body'><div class='players-div'></div></div></div>");
         out.println("   <div class='row'>");
         out.println("       <div class='panel panel-body'>"
@@ -104,7 +104,7 @@ public class game extends HttpServlet {
                 + "     </div>");
         out.println("       <div class='panel panel-body'>"
                 + "             <button id='resign'>Resign</button>"
-                + "             <div class='coin1'><img src='content/blue_chip.png' /></div>"
+                + "             <div class='coin' data-amount='5'><img src='Images/blue_chip.png' /></div>"
                 + "         </div>");
         out.println("   <div class='row'>"
                 + "         <textarea id='txtLog'></textarea>"
@@ -137,6 +137,7 @@ public class game extends HttpServlet {
 
     private void printScripts(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
         out.println("<script src='Scripts/jquery-2.1.4.js' type='text/javascript'></script>");
+        out.println("<script src='Scripts/jquery-ui.min.js' type='text/javascript'></script>");
         out.println("<script src='Scripts/bootstrap.js' type='text/javascript'></script>");
         out.println("<script src='Scripts/jquery.rotate.1-1.js' type='text/javascript'></script>");
         out.println("<script src='Scripts/GameScene.js' type='text/javascript'></script>");

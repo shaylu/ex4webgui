@@ -83,11 +83,13 @@ public class UIHotSpot {
 
     public String createHotSpotDiv() {
         String res = "";
+//        res += "<span class='hotspot-drop'>";
         if (betType != null) {
             res = "<div class='" + HOTSPOT_CLASS + " " + type.name() + " " + color.name() + "' data-betType='" + betType.name() + "' data-numbers='" + numbersArrayToString(numbers) + "'>" + text + "</div>";
         } else {
             res = "<div class='" + HOTSPOT_CLASS + " " + type.name() + " " + color.name() + "'>" + text + "</div>";
         }
+//        res += "</span>";
 
         return res;
     }

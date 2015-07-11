@@ -6,15 +6,18 @@
 package game.testing.servlets;
 
 import com.google.gson.Gson;
+import game.util.GameUtils;
 import game.util.RouletteService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.catalina.tribes.util.Arrays;
 import server.json.JsonMessage;
 import ws.roulette.BetType;
 import ws.roulette.RouletteWebService;
@@ -40,9 +43,29 @@ public class makeBet extends HttpServlet {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
             try {
+//                {'playername': playername, 'amount': amount, 'betType': betType, 'numbers': numbers}
+                
+                if (GameUtils.isUserPlaying(request) != true){
+                    out.println(new JsonMessage(JsonMessage.Status.Error, "user is not playing."));
+                    return;
+                }
+                
+                int amount = Integer.parseInt(request.getParameter("amount"));
+                ws.roulette.BetType betType =  ws.roulette.BetType.fromValue(request.getParameter("betType"));
+                
+                ArrayList<Integer> numbers = new ArrayList<>();
+                if (request.getParameter("numbers") != null){
+                    String[] split = request.getParameter("numbers").split(",");
+                    for (String num : split) {
+                        numbers.add(Integer.parseInt(num));
+                    }
+                }
+                
                 RouletteWebService service = RouletteService.getService();
-                service.makeBet(5, BetType.NOIR, new ArrayList<Integer>(), 3);
+                service.makeBet(amount, betType, numbers, GameUtils.getPlayerID(request));
+                
                 out.println(new JsonMessage(JsonMessage.Status.Success, ""));
+                
             } catch (Exception e) {
                 out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
             }

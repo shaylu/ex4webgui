@@ -13,6 +13,10 @@ var game = new GameData($logTextarea);
 var timer = undefined;
 var eventsIntervals;
 
+var getCurrentPlayer = function (){
+    return $('.game-area').data('.playername');
+};
+
 function TimeSpan(ghours, gminutes, gseconds) {
     this.hours = ghours;
     this.minutes = gminutes;
@@ -132,7 +136,6 @@ var getEvents = function (gamedata) {
         url: url,
         data: {'lastID': gamedata.lastHandledEvent}
     }).success(function (events) {
-        log('proccessing events...');
         processEvents(gamedata, events);
     }).error(function () {
         log('failed to get events data.');
@@ -215,9 +218,15 @@ var gameStarted = function (gamedata, event) {
         }
 
         log("Game Started!");
+        removeAllCoins();
         startTimer();
     });
 };
+
+var removeAllCoins = function () {
+    $('.coin.bet').remove();
+};
+
 var gameOver = function (gamedata) {
 
     clearInterval(eventsIntervals);
@@ -267,7 +276,24 @@ var playerResigned = function (gamedata, resigndata) {
     }
 };
 var playerBet = function (gamedata, betdata) {
-    $()
+    //amount: 5
+//betType: "STRAIGHT"
+//id: 10
+//numbers: [12]
+//playerName: "Name"
+//timeout: 0
+//type: "PLAYER_BET"
+//winningNumber: 0
+
+    log("'" + betdata.playerName + "' placed a '" + betdata.betType + "' bet of $" + betdata.amount);
+    
+    if (betdata.playerName !== getCurrentPlayer()) {
+        var player = game.getPlayer(betdata.playerName);
+        if (player !== undefined) {
+            var newAmount = player.money - betdata.amount;
+            player.updateMoneyOnUI(newAmount);
+        }
+    }
 };
 var createPlayersOnUI = function (players) {
     for (var i = 0, max = players.length; i < max; i++) {
@@ -302,6 +328,23 @@ var resign = function () {
     });
 };
 
+var makeBet = function (playername, coin, amount, betType, numbers) {
+    var url = 'tests/makeBet';
+    $.ajax({url: url, data: {'amount': amount, 'betType': betType, 'numbers': numbers}}).success(function (data) {
+        if (data.status === 'Error') {
+            $(coin).remove();
+        }
+        else {
+            var player = game.getPlayer(playername);
+            if (player !== undefined) {
+                var newAmount = player.money - amount;
+                player.money = newAmount;
+                player.updateMoneyOnUI(newAmount);
+            }
+        }
+    });
+};
+
 $(function () {
     var hotspots = $(".hotspot");
     hotspots.click(function (event) {
@@ -322,5 +365,27 @@ $(function () {
     eventsIntervals = setInterval(function () {
         getEvents(game);
     }, 1000);
+
+    var clonethis = function () {
+        return $(this).clone().addClass('bet');
+        $.ui.ddmanager.current.cancelHelperRemoval = true;
+    };
+
+    $('.coin').draggable({helper: clonethis, revert: 'invalid'});
+    $('.hotspot').droppable({
+        drop: function (event, ui) {
+            var spot = this;
+            var bettype = $(spot).data("bettype");
+            var numbers = $(spot).data("numbers");
+            console.log(bettype + " " + numbers);
+            alert(bettype + " " + numbers);
+            $.ui.ddmanager.current.cancelHelperRemoval = true;
+            var coin = ui.helper;
+            var money = $(coin).data('amount');
+            var playername = getCurrentPlayer();
+            makeBet(playername, coin, money, bettype, numbers);
+            log('trying to place a bet for ' + bettype + " of $" + money);
+        }
+    });
 });
 
