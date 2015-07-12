@@ -5,6 +5,7 @@
  */
 package game.testing.servlets;
 
+import game.util.RouletteService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,16 +13,22 @@ import java.io.PrintWriter;
 import static java.util.Arrays.stream;
 import static java.util.stream.StreamSupport.stream;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import server.json.JsonMessage;
+import ws.roulette.RouletteType;
+import ws.roulette.RouletteWebService;
 
 /**
  *
  * @author Shay
  */
 @WebServlet(name = "createGameFromXML", urlPatterns = {"/tests/createGameFromXML"})
+@MultipartConfig
 public class createGameFromXML extends HttpServlet {
 
     /**
@@ -37,12 +44,31 @@ public class createGameFromXML extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             
-            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+            Part filePart = request.getPart("file");
+            String data = "";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(filePart.getInputStream()));
             for (String line; (line = reader.readLine()) != null;) {
-                System.out.println(line);
+                data += line; 
+            }  
+            
+            try {
+                RouletteWebService service = RouletteService.getService();
+                service.createGameFromXML(data);
+                out.println(new JsonMessage(JsonMessage.Status.Success,""));
+            } catch (Exception e) {
+                out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
             }
+            
+            
+            
+//            
+//            
+//            /* TODO output your page here. You may use following sample code. */
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getParameter("file")));
+//            for (String line; (line = reader.readLine()) != null;) {
+//                System.out.println(line);
+//            }     
         }
     }
 
