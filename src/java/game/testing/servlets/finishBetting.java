@@ -5,6 +5,8 @@
  */
 package game.testing.servlets;
 
+import game.Constsants;
+import game.util.GameUtils;
 import game.util.RouletteService;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,9 +40,16 @@ public class finishBetting extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
+
+            if (GameUtils.getPlayerID(request) == 0) {
+                out.println(new JsonMessage(JsonMessage.Status.Error, "player is out of the game."));
+                return;
+            }
+
             try {
+                int id = GameUtils.getPlayerID(request);
                 RouletteWebService service = RouletteService.getService();
-                service.finishBetting(3);
+                service.finishBetting(id);
                 out.println(new JsonMessage(JsonMessage.Status.Success, ""));
             } catch (Exception e) {
                 out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));

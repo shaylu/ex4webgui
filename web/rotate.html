@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            .roulette-container{
+                padding: 0;
+                margin: 0;
+            }
+            .roulette-container{
+                display: block;
+            }
+            img.roulette {
+                height: 255px;
+                width: 255px;
+                position: relative;
+                float: left;
+
+            }
+            .ball {
+                position: relative;
+                z-index: 3;
+                top: 59px;
+                left: 137px;
+                float: left;
+
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="roulette-container">
+            <img class="ball" src="Images/ball.png" alt=""/>
+            <img class="roulette" src="Images/frenchRoulette.gif" alt=""/>
+            <!--<img class="roulette" src="Images/americanRoulette.gif" alt=""/>-->
+
+        </div>
+
+        <input type="number" min="0" max="360" id="slider" value="0" />
+        <input id="txt" type="text" /><button id="btn">Click</button><br>
+        <div id="container">
+
+        </div>
+        <script src="Scripts/jquery-2.1.4.js" type="text/javascript"></script>
+        <script>
+            $(function () {
+                $(document).on("change", "#slider", function (event) {
+                    $("img.roulette").css("transform", "rotate(" + $("#slider").val() + "deg)");
+                });
+                $("#btn").click(function () {
+                    var text = $("#slider").val() + ":" + $("#txt").val();
+                    $("#container").append("\n" + text);
+                });
+            });
+        </script>
+    </body>
+</html>

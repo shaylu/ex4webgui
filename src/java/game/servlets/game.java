@@ -15,6 +15,7 @@ import ws.roulette.RouletteType;
 import game.ui.UITable;
 import game.Constsants;
 import game.util.GameUtils;
+import game.util.RouletteService;
 
 /**
  *
@@ -22,7 +23,7 @@ import game.util.GameUtils;
  */
 public class game extends HttpServlet {
 
-    UITable creator = new UITable(RouletteType.AMERICAN);
+    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -86,19 +87,35 @@ public class game extends HttpServlet {
 
     private void printGame(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
         printTopHTML(request, response, out);
+
+        RouletteType type;
+        UITable creator;
+        String rouletteImage;
+        
+        try {
+             type = RouletteService.getRouletteType();
+        } catch (Exception e) {
+            out.printf("Failed to get roulette type from server, ", e.getMessage());
+            return;
+        }
+        
+        creator = new UITable(type);
+        rouletteImage = (type == RouletteType.FRENCH) ? "Images/frenchRoulette.gif" : "Images/americanRoulette.gif";
+
         out.println("<div class='container'>");
         out.println("   <div class='row gap'><button id='getEvents'>Get Events</button> <a href='index.html'>Home</a></div>");
-        
+
         // ============ GAME AREA ======================
-        out.println("<div class='game-area' style='display: none;' data-playername='" + GameUtils.getPlayerName(request) +"'>");
+        out.println("<div class='game-area' style='display: none;' data-playername='" + GameUtils.getPlayerName(request) + "' data-roulettetype='" + type.name() + "'>");
         out.println("   <div class='row'><div class='panel-body'><div class='players-div'></div></div></div>");
         out.println("   <div class='row'>");
         out.println("       <div class='panel panel-body'>"
                 + "             <div class='table-div inline'>"
                 + "             " + creator.createHTML()
                 + "              </div>"
-                + "              <div class='roulette-div inline'>"
-                + "                 <img src='Content/americanRoulette.gif' height=225 />"
+                + "              <div id='roulette-container'>"
+                + "                <img class='ball' src='Images/ball.png' />"
+                + "                <img class='roulette' src='" + rouletteImage + "' />"
                 + "              </div>"
                 + "         </div><h3 class='timer'></h3>"
                 + "     </div>");
@@ -138,6 +155,7 @@ public class game extends HttpServlet {
     private void printScripts(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
         out.println("<script src='Scripts/jquery-2.1.4.js' type='text/javascript'></script>");
         out.println("<script src='Scripts/jquery-ui.min.js' type='text/javascript'></script>");
+        out.println("<script src='Scripts/qtransform.js' type='text/javascript'></script>");
         out.println("<script src='Scripts/bootstrap.js' type='text/javascript'></script>");
         out.println("<script src='Scripts/jquery.rotate.1-1.js' type='text/javascript'></script>");
         out.println("<script src='Scripts/GameScene.js' type='text/javascript'></script>");

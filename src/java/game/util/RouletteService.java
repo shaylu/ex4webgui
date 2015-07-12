@@ -8,6 +8,7 @@ package game.util;
 import java.net.URL;
 import game.Constsants;
 import java.net.MalformedURLException;
+import ws.roulette.RouletteType;
 import ws.roulette.RouletteWebService;
 import ws.roulette.RouletteWebServiceService;
 
@@ -21,5 +22,11 @@ public class RouletteService {
         RouletteWebServiceService service = new RouletteWebServiceService(url);
         
         return service.getRouletteWebServicePort();
+    }
+    
+    public static RouletteType getRouletteType() throws Exception {
+        RouletteWebService service = getService();
+        RouletteType rouletteType = service.getGameDetails("").getRouletteType();
+        return rouletteType;
     }
 }

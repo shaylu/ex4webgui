@@ -57,8 +57,8 @@ and open the template in the editor.
             </div>
             <div id="divNewGameFromXML" class="SettingsDIV">
                 <h4>Or, Set up a new game from XML file</h4>
-                <form name="frmNewGameFromXML" method="post" action="/newgame" enctype="multipart/form-data">
-                    <div><input type="file" name="fileXMLFile" accept=".xml" /></div>
+                <form name="frmNewGameFromXML" method="post" action="tests/createGameFromXML" enctype="multipart/form-data">
+                    <div><input type="file" name="file" accept=".xml" /></div>
                     <div><input type="submit" value="Submit" /></div>
                 </form>
             </div>
@@ -67,14 +67,39 @@ and open the template in the editor.
         <script>
             $(function () {
                 var $ajaxMessage = $("#ajaxMessage");
-                
+
                 var setAjaxMessage = function (text) {
                     $ajaxMessage.text(text);
                 };
 
+                function getUrlParameter(sParam)
+                {
+                    var sPageURL = window.location.search.substring(1);
+                    var sURLVariables = sPageURL.split('&');
+                    for (var i = 0; i < sURLVariables.length; i++)
+                    {
+                        var sParameterName = sURLVariables[i].split('=');
+                        if (sParameterName[0] === sParam)
+                        {
+                            return sParameterName[1];
+                        }
+                    }
+                }
+
+                var messageFromURL = getUrlParameter("Message");
+                var statusFromURL = getUrlParameter("Status");
+                if (messageFromURL !== "") {
+                    var statusClass = (statusFromURL === "Error") ? "alert-danger" : "alert-success";
+                    $ajaxMessage.addClass("alert " + statusClass);
+                    setAjaxMessage(messageFromURL);
+                }
+
                 $('#frmNewGameSettings').submit(function (e) {
                     $.ajax({url: '/RouletteEX4WebGUI/newgame', data: $('#frmNewGameSettings').serialize()})
                             .success(function (data) {
+                                $ajaxMessage.removeClass("alert-danger");
+                                $ajaxMessage.removeClass("alert-success");
+
                                 var status = data.status;
                                 var message = data.message;
                                 if (status === "Success") {

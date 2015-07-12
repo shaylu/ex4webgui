@@ -9,12 +9,30 @@ var $logTextarea = $('#txtLog');
 var $gameArea = $('.game-area');
 var $scoreboardArea = $('.scoreboard-area');
 var $timerDiv = $('.timer');
+var $roulettImage = $('.roulette');
 var game = new GameData($logTextarea);
 var timer = undefined;
 var eventsIntervals;
 
-var getCurrentPlayer = function (){
-    return $('.game-area').data('.playername');
+var getCurrentPlayer = function () {
+    return $('.game-area').data('playername');
+};
+
+var getRouletteType = function () {
+    return $('.game-area').data('roulettetype');
+};
+
+var getRotateDegree = function (num) {
+    var american = [181, 11, 190, 48, 228, 87, 266, 124, 303, 162, 341, 134, 314, 20, 199, 58, 238, 95, 274, 294, 115, 256, 77, 218, 39, 331, 152, 350, 172, 322, 143, 285, 104, 247, 67, 209, 29, 0];
+    var  french = [0, 135, 302, 20, 321, 174, 263, 60, 204, 96, 185, 225, 40, 244, 116, 341, 154, 283, 77, 332, 125, 312, 87, 195, 165, 293, 11, 254, 50, 68, 214, 106, 351, 144, 273, 31, 234];
+    
+    var type = getRouletteType();
+    if (type === 'AMERICAN'){
+        return american[num];
+    }
+    else {
+        return french[num];
+    }
 };
 
 function TimeSpan(ghours, gminutes, gseconds) {
@@ -252,7 +270,12 @@ var winningNumber = function (winningNumber) {
     stopTimer();
 
     // turn wheel 
-    // TO DO
+//    var curr = $roulettImage.css('rotate').slice(0,-3);
+    var degree = getRotateDegree(winningNumber);
+    var degStr = degree + 'deg';
+    $roulettImage.animate({'rotate': degStr}, 1000);
+    degStr = '0deg';
+    $roulettImage.delay(3000).animate({'rotate': degStr}, 500);
 
     log("Winning number is: " + winningNumber);
     // clear all bets
@@ -286,7 +309,7 @@ var playerBet = function (gamedata, betdata) {
 //winningNumber: 0
 
     log("'" + betdata.playerName + "' placed a '" + betdata.betType + "' bet of $" + betdata.amount);
-    
+
     if (betdata.playerName !== getCurrentPlayer()) {
         var player = game.getPlayer(betdata.playerName);
         if (player !== undefined) {

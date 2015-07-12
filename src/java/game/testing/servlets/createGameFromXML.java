@@ -5,8 +5,12 @@
  */
 package game.testing.servlets;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import static java.util.Arrays.stream;
+import static java.util.stream.StreamSupport.stream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,15 +38,11 @@ public class createGameFromXML extends HttpServlet {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet createGameFromXML</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet createGameFromXML at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            
+            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+            for (String line; (line = reader.readLine()) != null;) {
+                System.out.println(line);
+            }
         }
     }
 

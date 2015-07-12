@@ -42,25 +42,23 @@ public class getEvents extends HttpServlet {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
             boolean userPlaying = GameUtils.isUserPlaying(request);
-            if (userPlaying != true){
+            if (userPlaying != true) {
                 out.println(new JsonMessage(JsonMessage.Status.Error, "User not playing."));
                 return;
             }
-            
+
             int lastID;
             String lastIDString = request.getParameter("lastID");
-            if (lastIDString == null)
-            {
+            if (lastIDString == null) {
 //                 out.println(new JsonMessage(JsonMessage.Status.Error, "no given last id."));
 //                return;
                 lastID = 0;
-            }
-            else {
+            } else {
                 lastID = Integer.parseInt(lastIDString);
             }
-            
+
             int playerID = GameUtils.getPlayerID(request);
-            
+
             try {
                 RouletteWebService service = RouletteService.getService();
                 List<Event> events = service.getEvents(lastID, playerID);

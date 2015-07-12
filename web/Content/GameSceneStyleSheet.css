@@ -16,8 +16,29 @@ and open the template in the editor.
 .player-resigned {
     opacity: 0.5;
 }
+.roulette-container{
+    padding: 0;
+    margin: 0;
+}
+.roulette-container{
+    display: block;
+}
+img.roulette {
+    height: 255px;
+    width: 255px;
+    position: relative;
+    float: left;
 
-.table-div, .roulette-div {
+}
+.ball {
+    position: relative;
+    z-index: 3;
+    top: 59px;
+    left: 137px;
+    float: left;
+}
+
+.table-div, .roulette-container {
     display: inline-block;
     float: left;
     padding: 10px;
