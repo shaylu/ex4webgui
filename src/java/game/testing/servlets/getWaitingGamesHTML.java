@@ -5,27 +5,23 @@
  */
 package game.testing.servlets;
 
-import com.google.gson.Gson;
 import game.util.RouletteService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import server.json.JsonMessage;
-import ws.roulette.GameDetails;
 import ws.roulette.RouletteWebService;
-import game.Constsants;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Shay
+ * @author Dell
  */
-@WebServlet(name = "joinGame", urlPatterns = {"/tests/joinGame"})
-public class joinGame extends HttpServlet {
+@WebServlet(name = "getWaitingGamesHTML", urlPatterns = {"/tests/getWaitingGamesHTML"})
+public class getWaitingGamesHTML extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,32 +34,28 @@ public class joinGame extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/json");
+        response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
             try {
-                if (request.getParameter("playerName") == null || request.getParameter("gameName") == null) {
-                    out.println(new JsonMessage(JsonMessage.Status.Error, "parameters missing."));
-                    return;
-                }
-
-                String playerName = request.getParameter("playerName");
-                String gameName = request.getParameter("gameName");
-
-                HttpSession session = request.getSession(true);
-                if (session.getAttribute(Constsants.SESSION_PLAYER_NAME) != null) {
-                    out.println(new JsonMessage(JsonMessage.Status.Error, "Player already in game."));
-                    return;
-                }
-
                 RouletteWebService service = RouletteService.getService();
-                int id = service.joinGame(gameName, playerName);
-                session.setAttribute(Constsants.SESSION_PLAYER_NAME, playerName);
-                session.setAttribute(Constsants.SESSION_PLAYER_ID, id);
-                session.setAttribute(Constsants.SESSION_GAME_NAME, gameName);
+                List<String> waitingGames = service.getWaitingGames();
 
-                out.println(new JsonMessage(JsonMessage.Status.Success, "Player joined a game."));
+                if (waitingGames.size() > 0) {
+                    String res = "";
+                    res += "<ul class='waiting-games-list'>";
+                    for (String name : waitingGames) {
+                        res += "<li><div>" + name + "</div></li>";
+                    }
+                    res += "</ul>";
+
+                    out.println(res);
+                } else {
+                    out.println("No waiting games.");
+                }
+
             } catch (Exception e) {
-                out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
+                out.println("Oops, something went wrong (" + e.getMessage() + ")");
             }
         }
     }

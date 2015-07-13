@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import game.util.GameUtils;
+import game.util.RouletteService;
+import server.json.JsonMessage;
+import ws.roulette.RouletteWebService;
 
 /**
  *
@@ -35,7 +38,13 @@ public class leaveGame extends HttpServlet {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
+            try {
+                RouletteWebService service = RouletteService.getService();
+                service.resign(GameUtils.getPlayerID(request));
+            } catch (Exception e) {
+            }
             GameUtils.leaveGame(request);
+            out.println(new JsonMessage(JsonMessage.Status.Success, "Successfully left game."));
         }
     }
 

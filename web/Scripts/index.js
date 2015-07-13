@@ -4,88 +4,72 @@
  * and open the template in the editor.
  */
 
-var $errorDiv = $('#joinError');
-var $joinDiv = $('#joinGame');
+var $playerNameInput = $('#txtPlayerName');
+var $waitingGamesArea = $('.waiting-games-area');
 var waitingGamesIntervals;
 
-var canCreateAGame = function () {
-    var url = 'tests/getGameDetails';
-    $.ajax({
-        url: url
-    }).success(function (data) {
-        var res;
-        
-        if (data.status !== 'Error') {
-            // a game is initialized
-            var status = data.status;
-            if (status === 'FINISHED')
-                res = true;
-            else
-                res = false;
-        }
-        else {
-            res = true;
-        }
-        
-        if (res === true) {
-            $('#gameDetails').text("No waiting games but you can create one!");
-        }
-        else {
-            $('#gameDetails').text("No waiting games, please wait for a game to finish.");
-        }
 
-        $joinDiv.hide();
-    });
-};
 
-var getWaitingGames = function () {
-    var url = 'tests/getWaitingGames';
-
-    var noWaitingGames = function () {
-        canCreateAGame();
-    };
-
-    var waitingGameExist = function () {
-        $('#gameDetails').text("There is a waiting game for you!");
-        $joinDiv.show();
-    };
-
-    $.ajax({
-        url: url
-    }).success(function (data) {
-        if (data === null || data === undefined || data.length === 0) {
-            // no waiting games
-            noWaitingGames();
-        }
-        else {
-            waitingGameExist();
-        }
-        ;
-    });
-};
-
-var joinGame = function (name){
+var joinGame = function (gameName, playerName) {
     var url = 'tests/joinGame';
-    
     $.ajax({
         url: url,
-        data: { 'name' : name}
+        data: {'playerName': playerName, 'gameName': gameName}
     }).success(function (data) {
-        window.location = 'game';
+        if (data.status !== 'Error') {
+            window.location = 'game';
+        }
+        else {
+            alert('Failed to join game.');
+        }
+    }).error(function(){
+        alert('Failed to join game.');
+    });
+};
+
+var getWaitingGamesHTML = function () {
+    var url = 'tests/getWaitingGamesHTML';
+
+    $.ajax({url: url}).success(function (data) {
+        $waitingGamesArea.children('.list').html(data);
+    }).error(function(){
+        $waitingGamesArea.children('.list').html("Oops, Something went Wrong...");
+    });
+};
+
+var showJoinForm = function(place, gameName){
+    var url = 'tests/getJoinForm';
+    $.ajax({'url': url, 'data': {'gameName': gameName}}).success(function (data) {
+        $(place).parent().html(data);
+    }).error(function(){
+        $(place).parent().html("Oops, Something went Wrong...");
+        $('.waiting-games-area .list .li').removeClass("clicked");
     });
 };
 
 $(document).ready(function () {
-    waitingGamesIntervals = setInterval(getWaitingGames, 5000);
-    getWaitingGames();
-
-    $('#frmJoinGame').submit(function () {
-        var name = $('#txtPlayerName').val();
-        joinGame(name);
-        return false;
+    $('#refreshWaitingGamesList').on('click', function(){
+        getWaitingGamesHTML();
     });
-//
-//    $('#btnRefreshGameDetails').on('click', function () {
-//        getGameDetails();
-//    });
+    
+    getWaitingGamesHTML();
+    
+    $(document).on('click', '.waiting-games-area li>div', function(event){
+        var name = $(this).text();
+        $('.waiting-games-area .li').removeClass("clicked");
+        $(this).addClass("clicked");
+        showJoinForm($(this), name);
+    });
+    
+    $(document).on('submit', '.waiting-games-area form', function(e){
+        e.preventDefault();
+        var playerName = $(this).children("input[name='txtPlayerName']").val();
+        var gameName = $(this).data("gamename");
+        joinGame(gameName, playerName);
+    });
+
+    $(document).on('click', '#joinGame form', function (e) {
+        e.preventDefault();
+        joinGame();
+    });
 });

@@ -56,10 +56,21 @@ public class GameUtils {
             return 0;
         }
     }
+    
+    public static String getGameName(HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        if (session.getAttribute(Constsants.SESSION_GAME_NAME) != null){
+            return session.getAttribute(Constsants.SESSION_GAME_NAME).toString();
+        }
+        else {
+            throw new Exception("player is not signed to a game.");
+        }
+    }
 
     public static void leaveGame(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(Constsants.SESSION_PLAYER_NAME, null);
         session.setAttribute(Constsants.SESSION_PLAYER_ID, null);
+        session.setAttribute(Constsants.SESSION_GAME_NAME, null);
     }
 }

@@ -42,8 +42,12 @@ public class getPlayersDetails extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             try {
+                if (request.getParameter("name") == null)
+                    throw new Exception("game name not given.");
+                
+                String gameName = request.getParameter("name");
                 RouletteWebService service = RouletteService.getService();
-                List<PlayerDetails> playersDetails = service.getPlayersDetails("");
+                List<PlayerDetails> playersDetails = service.getPlayersDetails(gameName);
                 out.println(new Gson().toJson(playersDetails));
             } catch (Exception e) {
                 out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));

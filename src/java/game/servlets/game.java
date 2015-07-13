@@ -23,8 +23,6 @@ import game.util.RouletteService;
  */
 public class game extends HttpServlet {
 
-    
-
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -38,11 +36,16 @@ public class game extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if (GameUtils.isUserPlaying(request) == true) {
-                printGame(request, response, out);
-            } else {
-                response.sendRedirect("index.html");
+            try {
+                if (GameUtils.isUserPlaying(request) == true) {
+                    printGame(request, response, out);
+                } else {
+                    response.sendRedirect("index.html");
+                }
+            } catch (Exception e) {
+                out.println("Ooops, something went wrong, " + e.getMessage());
             }
+
         }
     }
 
@@ -85,29 +88,70 @@ public class game extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void printGame(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+    private void printGame(HttpServletRequest request, HttpServletResponse response, PrintWriter out) throws Exception {
         printTopHTML(request, response, out);
 
         RouletteType type;
         UITable creator;
         String rouletteImage;
-        
+
         try {
-             type = RouletteService.getRouletteType();
+            type = RouletteService.getRouletteType(GameUtils.getGameName(request));
         } catch (Exception e) {
             out.printf("Failed to get roulette type from server, ", e.getMessage());
             return;
         }
-        
+
         creator = new UITable(type);
         rouletteImage = (type == RouletteType.FRENCH) ? "Images/frenchRoulette.gif" : "Images/americanRoulette.gif";
+        String playersPanel = createPlayersPanel();
 
+        String res = "";
+        res += "    <div class='container'>"
+                + "     <div class='game-area' style='display: none;' data-playername='" + GameUtils.getPlayerName(request) + "' data-roulettetype='" + type.name() + "' data-gamename='" + GameUtils.getGameName(request) + "'>"
+                + "         <div class='row'>"
+                + "             <div class='panel panel-default'>"
+                + "                 <div class='panel-heading'>"
+                + "                 [[[players]]]"
+                + "                 </div>"
+                + "             </div>"
+                + "         </div>"
+                + "         <div class='row'>"
+                + "             [[[table]]]"
+                + "             [[[roulette]]]"
+                + "         </div>"
+                + "         <div class='row'>"
+                + "             <div class='panel panel-default'>"
+                + "                 <div class='panel-body'>"
+                + "                     [[[resign]]]"
+                + "                     [[[chips]]]"
+                + "                     [[[quit]]]"
+                + "                 </div>"
+                + "             </div>"
+                + "         </div>"
+                + "         <div class='row'>"
+                + "             <div class='panel panel-default'>"
+                + "                 <div class='panel-body'>"
+                + "                 [[[log]]]"
+                + "                 </div>"
+                + "             </div>"
+                + "         </div>"
+                + "     [[[table]]]"
+                + "     </div>"
+                + " </div>";
+        
+        
         out.println("<div class='container'>");
         out.println("   <div class='row gap'><button id='getEvents'>Get Events</button> <a href='index.html'>Home</a></div>");
 
         // ============ GAME AREA ======================
-        out.println("<div class='game-area' style='display: none;' data-playername='" + GameUtils.getPlayerName(request) + "' data-roulettetype='" + type.name() + "'>");
-        out.println("   <div class='row'><div class='panel-body'><div class='players-div'></div></div></div>");
+        out.println("<div class='game-area' style='display: none;' data-playername='" + GameUtils.getPlayerName(request) + "' data-roulettetype='" + type.name() + "' data-gamename='" + GameUtils.getGameName(request) + "'>");
+        out.println("   <div class='row'>"
+                + "         <div class='panel panel-default'>"
+                + "             <div class='players-div panel-body'>"
+                + "             </div>"
+                + "         </div>"
+                + "     </div>");
         out.println("   <div class='row'>");
         out.println("       <div class='panel panel-body'>"
                 + "             <div class='table-div inline'>"

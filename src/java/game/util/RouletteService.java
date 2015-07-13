@@ -24,9 +24,9 @@ public class RouletteService {
         return service.getRouletteWebServicePort();
     }
     
-    public static RouletteType getRouletteType() throws Exception {
+    public static RouletteType getRouletteType(String gameName) throws Exception {
         RouletteWebService service = getService();
-        RouletteType rouletteType = service.getGameDetails("").getRouletteType();
+        RouletteType rouletteType = service.getGameDetails(gameName).getRouletteType();
         return rouletteType;
     }
 }

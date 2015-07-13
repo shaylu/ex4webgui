@@ -15,3 +15,22 @@ body {
 label {
     margin-right: 10px;
 }
+
+.waiting-games-area ul.waiting-games-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.waiting-games-area ul.waiting-games-list li {
+    cursor: pointer;
+    display: block;
+    border-bottom: 1px solid #efefef;
+    padding: 3px;
+    line-height: 25px;
+    margin: 0;
+}
+
+.waiting-games-area li.clicked {
+    background-color: #efefef;
+}

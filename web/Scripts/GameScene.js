@@ -10,6 +10,7 @@ var $gameArea = $('.game-area');
 var $scoreboardArea = $('.scoreboard-area');
 var $timerDiv = $('.timer');
 var $roulettImage = $('.roulette');
+var $gameName = $('.game-area').data('gamename');
 var game = new GameData($logTextarea);
 var timer = undefined;
 var eventsIntervals;
@@ -24,10 +25,10 @@ var getRouletteType = function () {
 
 var getRotateDegree = function (num) {
     var american = [181, 11, 190, 48, 228, 87, 266, 124, 303, 162, 341, 134, 314, 20, 199, 58, 238, 95, 274, 294, 115, 256, 77, 218, 39, 331, 152, 350, 172, 322, 143, 285, 104, 247, 67, 209, 29, 0];
-    var  french = [0, 135, 302, 20, 321, 174, 263, 60, 204, 96, 185, 225, 40, 244, 116, 341, 154, 283, 77, 332, 125, 312, 87, 195, 165, 293, 11, 254, 50, 68, 214, 106, 351, 144, 273, 31, 234];
-    
+    var french = [0, 135, 302, 20, 321, 174, 263, 60, 204, 96, 185, 225, 40, 244, 116, 341, 154, 283, 77, 332, 125, 312, 87, 195, 165, 293, 11, 254, 50, 68, 214, 106, 351, 144, 273, 31, 234];
+
     var type = getRouletteType();
-    if (type === 'AMERICAN'){
+    if (type === 'AMERICAN') {
         return american[num];
     }
     else {
@@ -221,7 +222,7 @@ var gameStarted = function (gamedata, event) {
     gamedata.roundsTime = event.timeout;
     // get and create players on UI
     var url = 'tests/getPlayersDetails';
-    $.ajax({url: url}).success(function (playersDetails) {
+    $.ajax({url: url, data: {'name': $gameName}}).success(function (playersDetails) {
         if (gamedata.boardInitialized === false) {
             for (var i = 0, max = playersDetails.length; i < max; i++) {
                 // create player and add to game data
@@ -237,6 +238,9 @@ var gameStarted = function (gamedata, event) {
 
         log("Game Started!");
         removeAllCoins();
+        $gameArea.children('input').prop('disabled', false);
+        $gameArea.css("opacity", "1");
+        $('.hotspot').droppable("enable");
         startTimer();
     });
 };
@@ -244,7 +248,6 @@ var gameStarted = function (gamedata, event) {
 var removeAllCoins = function () {
     $('.coin.bet').remove();
 };
-
 var gameOver = function (gamedata) {
 
     clearInterval(eventsIntervals);
@@ -258,16 +261,19 @@ var gameOver = function (gamedata) {
 
     signout();
 };
-
 var signout = function () {
     var url = 'tests/leaveGame';
     $.ajax({url: url}).success(function (data) {
         // nothing
     });
 };
-
 var winningNumber = function (winningNumber) {
     stopTimer();
+    
+    $gameArea.css("opacity", "0.5");
+    $gameArea.children('input').prop('disabled', false);
+    $logTextarea.css("opacity", "1");
+    $('.hotspot').droppable("disable");
 
     // turn wheel 
 //    var curr = $roulettImage.css('rotate').slice(0,-3);
@@ -299,25 +305,21 @@ var playerResigned = function (gamedata, resigndata) {
     }
 };
 var playerBet = function (gamedata, betdata) {
-    //amount: 5
-//betType: "STRAIGHT"
-//id: 10
-//numbers: [12]
-//playerName: "Name"
-//timeout: 0
-//type: "PLAYER_BET"
-//winningNumber: 0
-
     log("'" + betdata.playerName + "' placed a '" + betdata.betType + "' bet of $" + betdata.amount);
-
-    if (betdata.playerName !== getCurrentPlayer()) {
-        var player = game.getPlayer(betdata.playerName);
+    var player = game.getPlayer(betdata.playerName);
         if (player !== undefined) {
             var newAmount = player.money - betdata.amount;
             player.money = newAmount;
             player.updateMoneyOnUI(newAmount);
         }
-    }
+//    if (betdata.playerName !== getCurrentPlayer()) {
+//        var player = game.getPlayer(betdata.playerName);
+//        if (player !== undefined) {
+//            var newAmount = player.money - betdata.amount;
+//            player.money = newAmount;
+//            player.updateMoneyOnUI(newAmount);
+//        }
+//    }
 };
 var createPlayersOnUI = function (players) {
     for (var i = 0, max = players.length; i < max; i++) {
@@ -357,14 +359,15 @@ var makeBet = function (playername, coin, amount, betType, numbers) {
     $.ajax({url: url, data: {'amount': amount, 'betType': betType, 'numbers': numbers}}).success(function (data) {
         if (data.status === 'Error') {
             $(coin).remove();
+            alert('Failed to place your bet, ' + data.message);
         }
         else {
-            var player = game.getPlayer(playername);
-            if (player !== undefined) {
-                var newAmount = player.money - amount;
-                player.money = newAmount;
-                player.updateMoneyOnUI(newAmount);
-            }
+//            var player = game.getPlayer(playername);
+//            if (player !== undefined) {
+//                var newAmount = player.money - amount;
+//                player.money = newAmount;
+//                player.updateMoneyOnUI(newAmount);
+//            }
         }
     });
 };
