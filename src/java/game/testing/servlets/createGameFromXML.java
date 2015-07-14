@@ -55,6 +55,8 @@ public class createGameFromXML extends HttpServlet {
             try {
                 RouletteWebService service = RouletteService.getService();
                 service.createGameFromXML(data);
+                request.getRequestDispatcher("create.html?status=Sucess&Message=Created A Game!");
+                
                 out.println(new JsonMessage(JsonMessage.Status.Success,""));
             } catch (Exception e) {
                 out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));

@@ -20,9 +20,7 @@ and open the template in the editor.
     padding: 0;
     margin: 0;
 }
-.roulette-container{
-    display: block;
-}
+
 img.roulette {
     height: 255px;
     width: 255px;
@@ -38,15 +36,13 @@ img.roulette {
     float: left;
 }
 
-.table-div, .roulette-container {
-    display: inline-block;
-    float: left;
-    padding: 10px;
-}
 .column {
     display: inline-block;
     vertical-align: top;
+    /* float: left; */
 }
+
+
 
 .SmallNumber{
     width: 40px;
@@ -109,7 +105,7 @@ img.roulette {
     background-color: green;
 } 
 .Transparent{
-    background-color: orange;
+    background-color: transparent;
 }
 
 .hotspot {
@@ -124,4 +120,36 @@ div.ExtraButtons:not(:first-child) {
 }
 .ExtraButtons .hotspot {
     display: inline-block;
+}
+
+.game-controls-area{
+    vertical-align: top;
+    text-align: center;
+    height: 50px
+
+}
+
+
+.game-controls-area button{
+    text-align: center;
+    width: 70px;
+    height: 100%;
+}
+
+.coins,.coin-box,.coin {
+    display:inline-block;
+}
+.coins {
+    height: 50px;
+}
+.coin-box {
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+div.game-table div.roulette-container {
+    display: inline;
+    background-color: black;
 }

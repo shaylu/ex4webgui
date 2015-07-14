@@ -16,6 +16,11 @@ import game.ui.UITable;
 import game.Constsants;
 import game.util.GameUtils;
 import game.util.RouletteService;
+import java.util.List;
+import ws.roulette.GameDetails;
+import ws.roulette.GameDoesNotExists_Exception;
+import ws.roulette.PlayerDetails;
+import ws.roulette.RouletteWebService;
 
 /**
  *
@@ -38,7 +43,7 @@ public class game extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             try {
                 if (GameUtils.isUserPlaying(request) == true) {
-                    printGame(request, response, out);
+                    out.println(getGameHTML(request));
                 } else {
                     response.sendRedirect("index.html");
                 }
@@ -88,126 +93,111 @@ public class game extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void printGame(HttpServletRequest request, HttpServletResponse response, PrintWriter out) throws Exception {
-        printTopHTML(request, response, out);
+    private String getGameHTML(HttpServletRequest request) throws Exception {
+            String gameName = GameUtils.getGameName(request);
+            String playerName = GameUtils.getPlayerName(request);
+            RouletteWebService service = RouletteService.getService();
+            GameDetails gameDetails = service.getGameDetails(gameName);
+            RouletteType rouletteType = gameDetails.getRouletteType();
 
-        RouletteType type;
-        UITable creator;
-        String rouletteImage;
+            String table = new UITable(rouletteType).createHTML();
+            String roulette = createRoulette(rouletteType);
+            String timer = "<span id='lblTimer'></span>";
+            String resignButton = "<button id='btnResign'>Resign</button>";
+            String chips = createChipsArea();
+            String quitButton = "<button id='btnQuit'>Quit</button>";
+            String log = "<textarea id='txtLog'></textarea>";
 
-        try {
-            type = RouletteService.getRouletteType(GameUtils.getGameName(request));
-        } catch (Exception e) {
-            out.printf("Failed to get roulette type from server, ", e.getMessage());
-            return;
-        }
+            String HTML = "";
+            HTML += getTopHTML();
+            HTML += "   <div class='container'>"
+                    + "     <div class='game-area' style='display: none;' data-playername='" + playerName + "' data-roulettetype='" + rouletteType + "' data-gamename='" + gameName + "'>"
+                    + "         <div class='row'>"
+                    + "             <div class='panel panel-default'>"
+                    + "                 <div class='panel-heading'>"
+                    + "                 <!--PlayersPanel-->"
+                    + "                 </div>"
+                    + "             </div>"
+                    + "         </div>"
+                    + "         <div class='row game-table-area'>"
+                    + "             " + table
+                    + "             " + roulette
+                    + "         </div>"
+                    + "         <div class='row'>"
+                    + "             <div class='panel panel-default'>"
+                    + "                 <div class='panel-body game-controls-area'>"
+                    + "                     " + timer
+                    + "                     " + resignButton
+                    + "                     " + chips
+                    + "                     " + quitButton
+                    + "                 </div>"
+                    + "             </div>"
+                    + "         </div>"
+                    + "         <div class='row'>"
+                    + "             <div class='panel panel-default'>"
+                    + "                 <div class='panel-body'>"
+                    + "                 " + log
+                    + "                 </div>"
+                    + "             </div>"
+                    + "         </div>"
+                    + "     </div>"
+                    + " </div>";
+            HTML += getScriptsHTML();
+            HTML += getFooterHTML();
+            
+            return HTML;
+    }
 
-        creator = new UITable(type);
-        rouletteImage = (type == RouletteType.FRENCH) ? "Images/frenchRoulette.gif" : "Images/americanRoulette.gif";
-        String playersPanel = createPlayersPanel();
+    private String createRoulette(RouletteType rouletteType) {
+        String rouletteImage = (rouletteType == RouletteType.FRENCH) ? "frenchRoulette.gif" : "americanRoulette.gif";
+        return "<div class='roulette-container'><img class='ball' src='Images/ball.png' /><img class='roulette' src='Images/" + rouletteImage + "' /></div>";
+    }
 
+    private String createChipsArea() {
         String res = "";
-        res += "    <div class='container'>"
-                + "     <div class='game-area' style='display: none;' data-playername='" + GameUtils.getPlayerName(request) + "' data-roulettetype='" + type.name() + "' data-gamename='" + GameUtils.getGameName(request) + "'>"
-                + "         <div class='row'>"
-                + "             <div class='panel panel-default'>"
-                + "                 <div class='panel-heading'>"
-                + "                 [[[players]]]"
-                + "                 </div>"
-                + "             </div>"
-                + "         </div>"
-                + "         <div class='row'>"
-                + "             [[[table]]]"
-                + "             [[[roulette]]]"
-                + "         </div>"
-                + "         <div class='row'>"
-                + "             <div class='panel panel-default'>"
-                + "                 <div class='panel-body'>"
-                + "                     [[[resign]]]"
-                + "                     [[[chips]]]"
-                + "                     [[[quit]]]"
-                + "                 </div>"
-                + "             </div>"
-                + "         </div>"
-                + "         <div class='row'>"
-                + "             <div class='panel panel-default'>"
-                + "                 <div class='panel-body'>"
-                + "                 [[[log]]]"
-                + "                 </div>"
-                + "             </div>"
-                + "         </div>"
-                + "     [[[table]]]"
-                + "     </div>"
-                + " </div>";
-        
-        
-        out.println("<div class='container'>");
-        out.println("   <div class='row gap'><button id='getEvents'>Get Events</button> <a href='index.html'>Home</a></div>");
 
-        // ============ GAME AREA ======================
-        out.println("<div class='game-area' style='display: none;' data-playername='" + GameUtils.getPlayerName(request) + "' data-roulettetype='" + type.name() + "' data-gamename='" + GameUtils.getGameName(request) + "'>");
-        out.println("   <div class='row'>"
-                + "         <div class='panel panel-default'>"
-                + "             <div class='players-div panel-body'>"
-                + "             </div>"
-                + "         </div>"
-                + "     </div>");
-        out.println("   <div class='row'>");
-        out.println("       <div class='panel panel-body'>"
-                + "             <div class='table-div inline'>"
-                + "             " + creator.createHTML()
-                + "              </div>"
-                + "              <div id='roulette-container'>"
-                + "                <img class='ball' src='Images/ball.png' />"
-                + "                <img class='roulette' src='" + rouletteImage + "' />"
-                + "              </div>"
-                + "         </div><h3 class='timer'></h3>"
-                + "     </div>");
-        out.println("       <div class='panel panel-body'>"
-                + "             <button id='resign'>Resign</button>"
-                + "             <div class='coin' data-amount='5'><img src='Images/blue_chip.png' /></div>"
-                + "         </div>");
-        out.println("   <div class='row'>"
-                + "         <textarea id='txtLog'></textarea>"
-                + "     </div>");
-        out.println("</div>");
-        // ============ END GAME AREA ===================
+        res += "<div class='coins'>";
+        res += "<div class='coin-box'><div class='coin' data-amount='1'><img src='Images/green_chip.png' /></div><div class='coin-description'>1</div></div>";
+        res += "<div class='coin-box'><div class='coin' data-amount='5'><img src='Images/blue_chip.png' /></div><div class='coin-description'>5</div></div>";
+        res += "<div class='coin-box'><div class='coin' data-amount='10'><img src='Images/red_chip.png' /></div><div class='coin-description'>10</div></div>";
+        res += "<div class='coin-box'><div class='coin' data-amount='25'><img src='Images/black_chip.png' /></div><div class='coin-description'>25</div></div>";
+        res += "</div>";
 
-        // ============ SCORE BOARD AREA ================
-        out.println("<div class='scoreboard-area' style='display: none;'>");
-        out.println("</div>");
-        // ============ END SCORE BOARD AREA ============
-
-        out.println("</div>");
-        printScripts(request, response, out);
-        printBottomHTML(request, response, out);
+        return res;
     }
 
-    private void printTopHTML(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Roulette Game</title>");
-        out.println("<meta name='viewport' content='width=device-width, initial-scale=1.0'>");
-        out.println("<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>");
-        out.println("<link href='Content/bootstrap.css' rel='stylesheet' type='text/css'/>");
-        out.println("<link href='Content/GameSceneStyleSheet.css' rel='stylesheet' type='text/css'/>");
-        out.println("<link href='Content/roulette.css' rel='stylesheet' type='text/css'/>");
-        out.println("</head>");
-        out.println("<body>");
+    private String getTopHTML() {
+        String res = "";
+        res += "<html>"
+                + "<head>"
+                + "<title>Roulette Game</title>"
+                + "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                + "<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>"
+                + "<link href='Content/bootstrap.css' rel='stylesheet' type='text/css'/>"
+                + "<link href='Content/GameSceneStyleSheet.css' rel='stylesheet' type='text/css'/>"
+                + "<link href='Content/roulette.css' rel='stylesheet' type='text/css'/>"
+                + "</head>"
+                + "<body>";
+
+        return res;
     }
 
-    private void printScripts(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
-        out.println("<script src='Scripts/jquery-2.1.4.js' type='text/javascript'></script>");
-        out.println("<script src='Scripts/jquery-ui.min.js' type='text/javascript'></script>");
-        out.println("<script src='Scripts/qtransform.js' type='text/javascript'></script>");
-        out.println("<script src='Scripts/bootstrap.js' type='text/javascript'></script>");
-        out.println("<script src='Scripts/jquery.rotate.1-1.js' type='text/javascript'></script>");
-        out.println("<script src='Scripts/GameScene.js' type='text/javascript'></script>");
+    private String getScriptsHTML() {
+        String res = "";
+        res += "<script src='Scripts/jquery-2.1.4.js' type='text/javascript'></script>";
+        res += "<script src='Scripts/jquery-ui.min.js' type='text/javascript'></script>";
+        res += "<script src='Scripts/qtransform.js' type='text/javascript'></script>";
+        res += "<script src='Scripts/bootstrap.js' type='text/javascript'></script>";
+        res += "<script src='Scripts/jquery.rotate.1-1.js' type='text/javascript'></script>";
+        res += "<script src='Scripts/GameScene.js' type='text/javascript'></script>";
+        return res;
     }
 
-    private void printBottomHTML(HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
-        out.println("</body>");
-        out.println("</html>");
-    }
+    private String getFooterHTML() {
+        String res = "";
+        res += "   </body>"
+                + "</html>";
 
+        return res;
+    }
 }

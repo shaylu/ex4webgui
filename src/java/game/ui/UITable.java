@@ -26,12 +26,16 @@ public class UITable {
     public String createHTML() {
         String res = "";
 
+        res += "<div class='game-table'>";
+
+        //zeros
         res += "<div class='" + COLUMN_CLASS + "'>";
         {
             res += createZerosGroup();
         }
         res += "</div>";
-
+        
+        // numbers and extras
         res += "<div class='" + COLUMN_CLASS + "'>";
         {
             res += "<div>";
@@ -41,10 +45,12 @@ public class UITable {
             res += "</div>";
             res += "<div>";
             {
-            res += createExtraButtonsGroup();
+                res += createExtraButtonsGroup();
             }
             res += "</div>";
         }
+        res += "</div>";
+        
         res += "</div>";
 
         return res;
@@ -334,44 +340,44 @@ public class UITable {
                 res += hotspot.createHotSpotDiv();
             }
             res += "</div>";
-            
+
             res += "<div class='ExtraButtons'>";
             {
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.MediumHorizontalNumber, "1 to 18", UIHotSpot.HotSpotColor.Green, BetType.MANQUE, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.VericalSpacer, "", UIHotSpot.HotSpotColor.Transparent, null, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.MediumHorizontalNumber, "Even", UIHotSpot.HotSpotColor.Green, BetType.PAIR, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.VericalSpacer, "", UIHotSpot.HotSpotColor.Transparent, null, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.MediumHorizontalNumber, "Red", UIHotSpot.HotSpotColor.Red, BetType.ROUGE, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.VericalSpacer, "", UIHotSpot.HotSpotColor.Transparent, null, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.MediumHorizontalNumber, "Black", UIHotSpot.HotSpotColor.Black, BetType.NOIR, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.VericalSpacer, "", UIHotSpot.HotSpotColor.Transparent, null, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.MediumHorizontalNumber, "Odd", UIHotSpot.HotSpotColor.Green, BetType.IMPAIR, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.VericalSpacer, "", UIHotSpot.HotSpotColor.Transparent, null, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.MediumHorizontalNumber, "19 to 36", UIHotSpot.HotSpotColor.Green, BetType.PASSE, null);
                 res += hotspot.createHotSpotDiv();
-                
+
                 hotspot = new UIHotSpot(UIHotSpot.HotSpotType.VericalSpacer, "", UIHotSpot.HotSpotColor.Transparent, null, null);
-                res += hotspot.createHotSpotDiv(); 
+                res += hotspot.createHotSpotDiv();
             }
             res += "</div>";
         }
