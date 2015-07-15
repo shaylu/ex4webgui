@@ -6,37 +6,32 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Roulette</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="Content/bootstrap.css" rel="stylesheet" type="text/css"/>
         <link href="Content/roulette.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <div class="container">
-            <div class="row">
-                <div class="navbar navbar-default navbar-static-top">
-                    <div class="container">
-                        <ul class="navbar navbar-nav nav">
-                            <li><a class="nav" href="create.html">Create new game</a></li>
-                        </ul>
+        <div class="wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <ul class="navbar navbar-nav nav">
+                                <li><a class="nav" href="create.html">Create new game</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class='waiting-games-area panel panel-default'>
+                        <div class="container-fluid panel-heading"><button id='refreshWaitingGamesList'>Refresh</button></div>
+                        <div class='list panel-body'>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class='waiting-games-area panel panel-default'>
-                    <div class="container-fluid panel-heading"><button id='refreshWaitingGamesList'>Refresh</button></div>
-                    <div class='list panel-body'>
-                    </div>
-                </div>
-            </div>
-<!--            <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Join Game <button id="btnRefreshGameDetails">Refresh</button></div>
-                    <div id="joinGame" class="panel-body">
-                    </div>
-                </div>
-            </div>-->
         </div>
 
         <script src="Scripts/jquery-2.1.4.js" type="text/javascript"></script>

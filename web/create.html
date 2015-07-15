@@ -9,58 +9,62 @@ and open the template in the editor.
     <head>
         <title></title>
         <link href="Content/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="Content/roulette.css" rel="stylesheet" type="text/css"/>
+
     </head>
     <body>
         <div>
-            <div id="ajaxMessage"></div>
-            <div id="divNewGameSettings" class="SettingsDIV">
-                <h4>Create a new game using these settings:</h4>
-                <form id="frmNewGameSettings" name="frmNewGameSettings" method="post" action="/newgame">
-                    <div><label for="txtGameName">Game Name:</label><input type="text" name="txtGameName" value="New Game" /></div>
-                    <div><label for="rdRouletteType">Roulette Type:</label><input type="radio" name="rdRouletteType" value="American" checked /> American <input type="radio" name="rdRouletteType" value="French" /> French</div>
-                    <div>
-                        <label for="cmbHumanPlayers">Human Players:</label>
-                        <select name="cmbHumanPlayers">
-                            <option selected>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                        </select>
+            <div class="wrapper">
+                <div class="container">
+                    <div id="ajaxMessage" style="display: none;"></div>
+                    <div id="divNewGameSettings" class="SettingsDIV panel-body">
+                        <h4>Create a new game using these settings:</h4>
+                        <form id="frmNewGameSettings" name="frmNewGameSettings" method="post" action="/newgame">
+                            <div><label for="txtGameName">Game Name:</label><input type="text" name="txtGameName" value="New Game" /></div>
+                            <div><label for="rdRouletteType">Roulette Type:</label><input type="radio" name="rdRouletteType" value="American" checked /> American <input type="radio" name="rdRouletteType" value="French" /> French</div>
+                            <div>
+                                <label for="cmbHumanPlayers">Human Players:</label><select name="cmbHumanPlayers">
+                                    <option selected>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                    <option>6</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="cmbComputerPlayers">Computer Players:</label><select name="cmbComputerPlayers">
+                                    <option selected>0</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                    <option>6</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="txtAmountOfMoney">Initial Money</label><input type="number" name="txtAmountOfMoney" min="1" max="100" value="100" />
+                            </div>
+                            <div>
+                                <label for="txtMinBetsPerPlayer">Minimum Bets</label><input type="number" name="txtMinBetsPerPlayer" min="0" max="1" value="0"/>
+                            </div>
+                            <div>
+                                <label for="txtMaxBetsPerPlayer">Maximum Bets</label><input type="number" name="txtMaxBetsPerPlayer" min="0" max="10" value="5"/>
+                            </div>
+                            <div>
+                                <input type="submit" value="Submit" />
+                            </div>
+                        </form>
                     </div>
-                    <div>
-                        <label for="cmbComputerPlayers">Computer Players:</label>
-                        <select name="cmbComputerPlayers">
-                            <option selected>0</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                        </select>
+                    <div id="divNewGameFromXML" class="SettingsDIV panel-body">
+                        <h4>Or, Set up a new game from XML file</h4>
+                        <form name="frmNewGameFromXML" method="post" action="tests/createGameFromXML" enctype="multipart/form-data">
+                            <div><input type="file" name="file" accept=".xml" /></div>
+                            <div><input type="submit" value="Submit" /></div>
+                        </form>
                     </div>
-                    <div>
-                        <label for="txtAmountOfMoney">Initial Money</label><input type="number" name="txtAmountOfMoney" min="1" max="100" value="100" />
-                    </div>
-                    <div>
-                        <label for="txtMinBetsPerPlayer">Minimum Bets</label><input type="number" name="txtMinBetsPerPlayer" min="0" max="1" value="0"/>
-                    </div>
-                    <div>
-                        <label for="txtMaxBetsPerPlayer">Maximum Bets</label><input type="number" name="txtMaxBetsPerPlayer" min="0" max="10" value="5"/>
-                    </div>
-                    <div>
-                        <input type="submit" value="Submit" />
-                    </div>
-                </form>
-            </div>
-            <div id="divNewGameFromXML" class="SettingsDIV">
-                <h4>Or, Set up a new game from XML file</h4>
-                <form name="frmNewGameFromXML" method="post" action="tests/createGameFromXML" enctype="multipart/form-data">
-                    <div><input type="file" name="file" accept=".xml" /></div>
-                    <div><input type="submit" value="Submit" /></div>
-                </form>
+                </div>
             </div>
         </div>
         <script src="Scripts/jquery-2.1.4.js"></script>
@@ -132,6 +136,19 @@ and open the template in the editor.
                     display: inline-block;
                     float: left;
                     box-sizing: border-box;
+                    color: white;
+                }
+                
+                 .SettingsDIV input, select {
+                     color: black;
+                }
+                
+                .SettingsDIV input[type='text'], select, input[type='number'], input[type='file']{
+                    width: 150px;
+                    padding: 3px;
+                    margin: 0px;
+                    background-color: white;
+                    
                 }
 
                 .SettingsDIV:last-of-type {
@@ -140,14 +157,19 @@ and open the template in the editor.
 
                 .SettingsDIV label {
                     margin-right: 10px;
-                    width: 150px;
-                    max-width: 150px;
+                    width: 170px;
                     display: inline-block;
                 }
 
                 .SettingsDIV form > div {
-                    line-height: 40px;
+                    line-height: 25px;
+                    margin-bottom: 10px;
                 }
+                .SettingsDIV h4 {
+                    font-weight: bold;
+                    margin-bottom: 25px;
+                }
+                
             </style>
     </body>
 </html>

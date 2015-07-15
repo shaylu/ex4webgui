@@ -7,11 +7,34 @@ and open the template in the editor.
     Created on : Jul 8, 2015, 7:25:43 PM
     Author     : Dell
 */
-
+* {
+    box-sizing: border-box;
+}
+html {
+    height: 100%;
+}
 body {
     font-family: Arial;
+    background-image: url('../Images/bg.jpg');
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
+.wrapper {
+    margin: 50px;
+    background: rgba(0,0,0,0.65);
+    width: calc(100% - 100px);
+    height: calc(100% - 100px) !important;
+    vertical-align: middle;
+    overflow: auto;
+    padding: 50px
+}
+
+.container {
+}
 label {
     margin-right: 10px;
 }
