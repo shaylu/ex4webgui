@@ -10,14 +10,15 @@ import game.util.GameUtils;
 import game.util.RouletteService;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import server.json.JsonMessage;
-import ws.roulette.GameDetails;
+import ws.roulette.Event;
 import ws.roulette.PlayerDetails;
 import ws.roulette.RouletteWebService;
 
@@ -25,8 +26,8 @@ import ws.roulette.RouletteWebService;
  *
  * @author Dell
  */
-@WebServlet(name = "getPlayersPanel", urlPatterns = {"/tests/getPlayersPanel"})
-public class getPlayersPanel extends HttpServlet {
+@WebServlet(name = "getScoreBoard", urlPatterns = {"/tests/getScoreBoard"})
+public class getScoreBoard extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,24 +42,14 @@ public class getPlayersPanel extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             try {
-                if (request.getParameter("gameName") == null)
-                    throw new Exception("game name not given.");
-                
-                String gameName = request.getParameter("gameName");
-                RouletteWebService service = RouletteService.getService();
-                String res = "";
-                List<PlayerDetails> playersDetails = service.getPlayersDetails(gameName);
-                for (PlayerDetails playersDetail : playersDetails) {
-                    String playerName = playersDetail.getName();
-                    String playerMoney = String.valueOf(playersDetail.getMoney());
-                    String playerClass = (GameUtils.getPlayerName(request).equals(playerName) == true) ? "player current" : "player";
-                    res += "<div class='" + playerClass + "' name='" + playerName +"'><div class='playerName'>" + playerName +"</div><div class='playerMoney'>" + playerMoney +"</div></div>";
+                if (GameUtils.isUserPlaying(request) == true) {
+                    out.println(getScoreBoardHTML(request));
+                } else {
+                    response.sendRedirect("index.html");
                 }
-                out.println(res);
             } catch (Exception e) {
-                out.println("Oops, something went wrong, " + e.getMessage());
+                out.println("Ooops, something went wrong, " + e.getMessage());
             }
         }
     }
@@ -102,4 +93,24 @@ public class getPlayersPanel extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private String getScoreBoardHTML(HttpServletRequest request) throws Exception {
+        RouletteWebService service = RouletteService.getService();
+        List<PlayerDetails> playersDetails = service.getPlayersDetails(GameUtils.getGameName(request));
+        PlayerDetails[] sorted = playersDetails.stream().sorted((p1, p2) -> Integer.compare(p2.getMoney(),p1.getMoney())).toArray(PlayerDetails[]::new);
+        
+        String res = "";
+        res += "<div class='score-board'>";
+        res += "<div class='results'><h3>Score Board</h3>";
+
+        for (int i = 0; i < sorted.length; i++) {
+            PlayerDetails player = sorted[i];
+            res += "<div class='result'>(" + (i + 1) + ")&#09;" + player.getName() + ": " + player.getMoney() +"</div>";
+        }
+        
+        res += "</div>";
+        res += "<div><button class='home-button'>Home</button></div>";
+        res += "</div>";
+        
+        return res;
+    }
 }

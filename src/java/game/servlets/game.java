@@ -94,63 +94,66 @@ public class game extends HttpServlet {
     }// </editor-fold>
 
     private String getGameHTML(HttpServletRequest request) throws Exception {
-            String gameName = GameUtils.getGameName(request);
-            String playerName = GameUtils.getPlayerName(request);
-            RouletteWebService service = RouletteService.getService();
-            GameDetails gameDetails = service.getGameDetails(gameName);
-            RouletteType rouletteType = gameDetails.getRouletteType();
+        String gameName = GameUtils.getGameName(request);
+        String playerName = GameUtils.getPlayerName(request);
+        RouletteWebService service = RouletteService.getService();
+        GameDetails gameDetails = service.getGameDetails(gameName);
+        RouletteType rouletteType = gameDetails.getRouletteType();
 
-            String table = new UITable(rouletteType).createHTML();
-            String roulette = createRoulette(rouletteType);
-            String timer = "<span id='lblTimer'></span>";
-            String resignButton = "<button id='btnResign'>Resign</button>";
-            String chips = createChipsArea();
-            String quitButton = "<button id='btnQuit'>Quit</button>";
-            String log = "<textarea id='txtLog'></textarea>";
+        String table = new UITable(rouletteType).createHTML();
+        String roulette = createRoulette(rouletteType);
+        String timer = "<span id='lblTimer'></span>";
+        String resignButton = "<button id='btnResign'>Resign</button>";
+        String finishBettingButton = "<button id='btnFinishBetting'>Finish Betting</button>";
+        String chips = createChipsArea();
+        String quitButton = "<button id='btnQuit'>Quit</button>";
+        String log = "<textarea id='txtLog'></textarea>";
 
-            String HTML = "";
-            HTML += getTopHTML();
-            HTML += "   <div class='container'>"
-                    + "     <div class='game-area' style='display: none;' data-playername='" + playerName + "' data-roulettetype='" + rouletteType + "' data-gamename='" + gameName + "'>"
-                    + "         <div class='row'>"
-                    + "             <div class='panel panel-default'>"
-                    + "                 <div class='panel-heading'>"
-                    + "                 <!--PlayersPanel-->"
-                    + "                 </div>"
-                    + "             </div>"
-                    + "         </div>"
-                    + "         <div class='row game-table-area'>"
-                    + "             " + table
-                    + "             " + roulette
-                    + "         </div>"
-                    + "         <div class='row'>"
-                    + "             <div class='panel panel-default'>"
-                    + "                 <div class='panel-body game-controls-area'>"
-                    + "                     " + timer
-                    + "                     " + resignButton
-                    + "                     " + chips
-                    + "                     " + quitButton
-                    + "                 </div>"
-                    + "             </div>"
-                    + "         </div>"
-                    + "         <div class='row'>"
-                    + "             <div class='panel panel-default'>"
-                    + "                 <div class='panel-body'>"
-                    + "                 " + log
-                    + "                 </div>"
-                    + "             </div>"
-                    + "         </div>"
-                    + "     </div>"
-                    + " </div>";
-            HTML += getScriptsHTML();
-            HTML += getFooterHTML();
-            
-            return HTML;
+        String HTML = "";
+        HTML += getTopHTML();
+        HTML += "   <div class='container'>"
+                + "     <div class='waiting-area'>Waiting for game to start...</div>"
+                + "     <div class='game-area' style='dispaly: none' data-playername='" + playerName + "' data-roulettetype='" + rouletteType + "' data-gamename='" + gameName + "'>"
+                + "         <div class='row'>"
+                + "             <div class='panel panel-default'>"
+                + "                 <div class='panel-heading players'>"
+                + "                 <!--PlayersPanel-->"
+                + "                 </div>"
+                + "             </div>"
+                + "         </div>"
+                + "         <div class='row game-table-area'>"
+                + "             " + table
+                + "             " + roulette
+                + "         </div>"
+                + "         <div class='row'>"
+                + "             <div class='panel panel-default'>"
+                + "                 <div class='panel-body game-controls-area'>"
+                + "                     " + timer
+                + "                     " + finishBettingButton
+                + "                     " + chips
+                + "                     " + resignButton
+                + "                     " + quitButton
+                + "                 </div>"
+                + "             </div>"
+                + "         </div>"
+                + "         <div class='row'>"
+                + "             <div class='panel panel-default'>"
+                + "                 <div class='panel-body'>"
+                + "                 " + log
+                + "                 </div>"
+                + "             </div>"
+                + "         </div>"
+                + "     </div>"
+                + " </div>";
+        HTML += getScriptsHTML();
+        HTML += getFooterHTML();
+
+        return HTML;
     }
 
     private String createRoulette(RouletteType rouletteType) {
         String rouletteImage = (rouletteType == RouletteType.FRENCH) ? "frenchRoulette.gif" : "americanRoulette.gif";
-        return "<div class='roulette-container'><img class='ball' src='Images/ball.png' /><img class='roulette' src='Images/" + rouletteImage + "' /></div>";
+        return "<div class='roulette-container'><img class='roulette' src='Images/" + rouletteImage + "' /><img class='ball' src='Images/ball.png' /></div>";
     }
 
     private String createChipsArea() {
@@ -189,6 +192,7 @@ public class game extends HttpServlet {
         res += "<script src='Scripts/qtransform.js' type='text/javascript'></script>";
         res += "<script src='Scripts/bootstrap.js' type='text/javascript'></script>";
         res += "<script src='Scripts/jquery.rotate.1-1.js' type='text/javascript'></script>";
+//        res += "<script src='Scripts/GameTimer.js' type='text/javascript'></script>";
         res += "<script src='Scripts/GameScene.js' type='text/javascript'></script>";
         return res;
     }

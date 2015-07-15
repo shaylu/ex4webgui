@@ -8,6 +8,27 @@ and open the template in the editor.
     Author     : Shay
 */
 
+.results {
+    border: 5px solid #efefef;
+    padding: 50px;
+}
+
+.result {
+    line-height: 30px;
+    font-size: 12pt;
+    border-bottom: 1px solid #efefef;
+}
+
+div.game-table, div.roulette-container {
+    display: inline;
+    height: 500px;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+}
 .gap {
     height: 50px;
     display: block;
@@ -25,7 +46,7 @@ img.roulette {
     height: 255px;
     width: 255px;
     position: relative;
-    float: left;
+    /*float: left;*/
 
 }
 .ball {
@@ -42,7 +63,20 @@ img.roulette {
     /* float: left; */
 }
 
+.player {
+    width: 250px;
+    height: 55px;
+    display: inline-block;
+}
 
+.player.current {
+    border-bottom: 3px solid black;
+}
+
+.playerName {
+    font-weight: bold;
+    font-size: 12pt;
+}
 
 .SmallNumber{
     width: 40px;
