@@ -16,7 +16,7 @@ and open the template in the editor.
         <div>
             <div class="wrapper">
                 <div class="container">
-                    <div id="ajaxMessage" style="display: none;"></div>
+                    <div id="ajaxMessage" class="panel panel-body" style="display: none;"></div>
                     <div id="divNewGameSettings" class="SettingsDIV panel-body">
                         <h4>Create a new game using these settings:</h4>
                         <form id="frmNewGameSettings" name="frmNewGameSettings" method="post" action="/newgame">
@@ -68,64 +68,66 @@ and open the template in the editor.
             </div>
         </div>
         <script src="Scripts/jquery-2.1.4.js"></script>
-        <script>
-            $(function () {
-                var $ajaxMessage = $("#ajaxMessage");
+        <script src="Scripts/create.js"></script>
 
-                var setAjaxMessage = function (text) {
-                    $ajaxMessage.text(text);
-                };
-
-                function getUrlParameter(sParam)
-                {
-                    var sPageURL = window.location.search.substring(1);
-                    var sURLVariables = sPageURL.split('&');
-                    for (var i = 0; i < sURLVariables.length; i++)
-                    {
-                        var sParameterName = sURLVariables[i].split('=');
-                        if (sParameterName[0] === sParam)
+        <!--        <script>
+                    $(function () {
+                        var $ajaxMessage = $("#ajaxMessage");
+        
+                        var setAjaxMessage = function (text) {
+                            $ajaxMessage.text(text);
+                        };
+        
+                        function getUrlParameter(sParam)
                         {
-                            return sParameterName[1];
+                            var sPageURL = window.location.search.substring(1);
+                            var sURLVariables = sPageURL.split('&');
+                            for (var i = 0; i < sURLVariables.length; i++)
+                            {
+                                var sParameterName = sURLVariables[i].split('=');
+                                if (sParameterName[0] === sParam)
+                                {
+                                    return sParameterName[1];
+                                }
+                            }
                         }
-                    }
-                }
-
-                var messageFromURL = getUrlParameter("Message");
-                var statusFromURL = getUrlParameter("Status");
-                if (messageFromURL !== "") {
-                    var statusClass = (statusFromURL === "Error") ? "alert-danger" : "alert-success";
-                    $ajaxMessage.addClass("alert " + statusClass);
-                    setAjaxMessage(messageFromURL);
-                }
-
-                $('#frmNewGameSettings').submit(function (e) {
-                    $.ajax({url: '/RouletteEX4WebGUI/newgame', data: $('#frmNewGameSettings').serialize()})
-                            .success(function (data) {
-                                $ajaxMessage.removeClass("alert-danger");
-                                $ajaxMessage.removeClass("alert-success");
-
-                                var status = data.status;
-                                var message = data.message;
-                                if (status === "Success") {
-                                    if (message !== undefined) {
-                                        $ajaxMessage.addClass("alert alert-success");
-                                        setAjaxMessage(message);
-                                    }
-                                }
-                                else {
-                                    if (message !== undefined) {
-                                        $ajaxMessage.addClass("alert alert-danger");
-                                        setAjaxMessage(message);
-                                    }
-                                }
-                            })
-                            .error(function () {
-                                setAjaxMessage("Failed to make AJAX call. ")
-                            });
-                    return false;
-                });
-            });
-        </script>
+        
+                        var messageFromURL = getUrlParameter("Message");
+                        var statusFromURL = getUrlParameter("Status");
+                        if (messageFromURL !== "") {
+                            var statusClass = (statusFromURL === "Error") ? "alert-danger" : "alert-success";
+                            $ajaxMessage.addClass("alert " + statusClass);
+                            setAjaxMessage(messageFromURL);
+                        }
+        
+                        $('#frmNewGameSettings').submit(function (e) {
+                            $.ajax({url: '/RouletteEX4WebGUI/newgame', data: $('#frmNewGameSettings').serialize()})
+                                    .success(function (data) {
+                                        $ajaxMessage.removeClass("alert-danger");
+                                        $ajaxMessage.removeClass("alert-success");
+        
+                                        var status = data.status;
+                                        var message = data.message;
+                                        if (status === "Success") {
+                                            if (message !== undefined) {
+                                                $ajaxMessage.addClass("alert alert-success");
+                                                setAjaxMessage(message);
+                                            }
+                                        }
+                                        else {
+                                            if (message !== undefined) {
+                                                $ajaxMessage.addClass("alert alert-danger");
+                                                setAjaxMessage(message);
+                                            }
+                                        }
+                                    })
+                                    .error(function () {
+                                        setAjaxMessage("Failed to make AJAX call. ")
+                                    });
+                            return false;
+                        });
+                    });
+                </script>-->
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
             <script src="Scripts/bootstrap.js" type="text/javascript"></script>
             <style>
@@ -138,17 +140,17 @@ and open the template in the editor.
                     box-sizing: border-box;
                     color: white;
                 }
-                
-                 .SettingsDIV input, select {
-                     color: black;
+
+                .SettingsDIV input, select {
+                    color: black;
                 }
-                
+
                 .SettingsDIV input[type='text'], select, input[type='number'], input[type='file']{
                     width: 150px;
                     padding: 3px;
                     margin: 0px;
                     background-color: white;
-                    
+
                 }
 
                 .SettingsDIV:last-of-type {
@@ -169,7 +171,7 @@ and open the template in the editor.
                     font-weight: bold;
                     margin-bottom: 25px;
                 }
-                
+
             </style>
     </body>
 </html>

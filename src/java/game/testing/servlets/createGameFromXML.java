@@ -44,28 +44,21 @@ public class createGameFromXML extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
-            
+
             Part filePart = request.getPart("file");
             String data = "";
             BufferedReader reader = new BufferedReader(new InputStreamReader(filePart.getInputStream()));
             for (String line; (line = reader.readLine()) != null;) {
-                data += line; 
-            }  
-            
+                data += line;
+            }
+
             try {
                 RouletteWebService service = RouletteService.getService();
                 service.createGameFromXML(data);
-                request.getRequestDispatcher("create.html?status=Sucess&Message=Created A Game!");
-                
-                out.println(new JsonMessage(JsonMessage.Status.Success,""));
+                response.sendRedirect("../create.html?status=Sucess&message=Created A Game!");
             } catch (Exception e) {
-                out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
+                response.sendRedirect("../create.html?status=Error&message=" + e.getMessage());
             }
-            
-            
-            
-//            
-//            
 //            /* TODO output your page here. You may use following sample code. */
 //            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getParameter("file")));
 //            for (String line; (line = reader.readLine()) != null;) {
