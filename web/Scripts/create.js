@@ -61,7 +61,7 @@ function getUrlParameter(sParam)
 $(function () {
     var messageFromURL = getUrlParameter("message");
     var statusFromURL = getUrlParameter("status");
-    if (messageFromURL !== "") {
+    if (messageFromURL !== undefined) {
         var data = {};
         data.message = unescape(messageFromURL);
         data.status = statusFromURL;

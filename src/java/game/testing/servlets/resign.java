@@ -39,7 +39,7 @@ public class resign extends HttpServlet {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
             try {
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 service.resign(GameUtils.getPlayerID(request));
                 out.println(new JsonMessage(JsonMessage.Status.Success,""));
             } catch (Exception e) {

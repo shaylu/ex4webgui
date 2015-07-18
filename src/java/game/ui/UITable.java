@@ -26,7 +26,7 @@ public class UITable {
     public String createHTML() {
         String res = "";
 
-        res += "<div class='game-table'>";
+        res += "<span><div class='game-table'>";
 
         //zeros
         res += "<div class='" + COLUMN_CLASS + "'>";
@@ -51,7 +51,7 @@ public class UITable {
         }
         res += "</div>";
         
-        res += "</div>";
+        res += "</span></div>";
 
         return res;
     }

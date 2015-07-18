@@ -1,0 +1,3 @@
+<WebService>
+	<WsdlURL>http://localhost:8084/RouletteEX4Web/RouletteWebServiceService?wsdl</WsdlURL>
+</WebService>

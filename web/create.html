@@ -7,14 +7,21 @@ and open the template in the editor.
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title></title>
+        <title>Roulette - Create a new game</title>
         <link href="Content/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
         <link href="Content/roulette.css" rel="stylesheet" type="text/css"/>
-
     </head>
     <body>
-        <div>
-            <div class="wrapper">
+        <div class="wrapper">
+            <div class="row">
+                <div class="container">
+                    <ul class="menu">
+                        <li class="menu-item"><a class="nav" href="index.html">< GO HOME</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
                 <div class="container">
                     <div id="ajaxMessage" class="panel panel-body" style="display: none;"></div>
                     <div id="divNewGameSettings" class="SettingsDIV panel-body">
@@ -68,110 +75,7 @@ and open the template in the editor.
             </div>
         </div>
         <script src="Scripts/jquery-2.1.4.js"></script>
+        <script src="Scripts/bootstrap.js" type="text/javascript"></script>
         <script src="Scripts/create.js"></script>
-
-        <!--        <script>
-                    $(function () {
-                        var $ajaxMessage = $("#ajaxMessage");
-        
-                        var setAjaxMessage = function (text) {
-                            $ajaxMessage.text(text);
-                        };
-        
-                        function getUrlParameter(sParam)
-                        {
-                            var sPageURL = window.location.search.substring(1);
-                            var sURLVariables = sPageURL.split('&');
-                            for (var i = 0; i < sURLVariables.length; i++)
-                            {
-                                var sParameterName = sURLVariables[i].split('=');
-                                if (sParameterName[0] === sParam)
-                                {
-                                    return sParameterName[1];
-                                }
-                            }
-                        }
-        
-                        var messageFromURL = getUrlParameter("Message");
-                        var statusFromURL = getUrlParameter("Status");
-                        if (messageFromURL !== "") {
-                            var statusClass = (statusFromURL === "Error") ? "alert-danger" : "alert-success";
-                            $ajaxMessage.addClass("alert " + statusClass);
-                            setAjaxMessage(messageFromURL);
-                        }
-        
-                        $('#frmNewGameSettings').submit(function (e) {
-                            $.ajax({url: '/RouletteEX4WebGUI/newgame', data: $('#frmNewGameSettings').serialize()})
-                                    .success(function (data) {
-                                        $ajaxMessage.removeClass("alert-danger");
-                                        $ajaxMessage.removeClass("alert-success");
-        
-                                        var status = data.status;
-                                        var message = data.message;
-                                        if (status === "Success") {
-                                            if (message !== undefined) {
-                                                $ajaxMessage.addClass("alert alert-success");
-                                                setAjaxMessage(message);
-                                            }
-                                        }
-                                        else {
-                                            if (message !== undefined) {
-                                                $ajaxMessage.addClass("alert alert-danger");
-                                                setAjaxMessage(message);
-                                            }
-                                        }
-                                    })
-                                    .error(function () {
-                                        setAjaxMessage("Failed to make AJAX call. ")
-                                    });
-                            return false;
-                        });
-                    });
-                </script>-->
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-            <script src="Scripts/bootstrap.js" type="text/javascript"></script>
-            <style>
-                .SettingsDIV {
-                    padding: 10px;
-                    font-family: 'Open Sans', sans-serif;
-                    width: 50%;
-                    display: inline-block;
-                    float: left;
-                    box-sizing: border-box;
-                    color: white;
-                }
-
-                .SettingsDIV input, select {
-                    color: black;
-                }
-
-                .SettingsDIV input[type='text'], select, input[type='number'], input[type='file']{
-                    width: 150px;
-                    padding: 3px;
-                    margin: 0px;
-                    background-color: white;
-
-                }
-
-                .SettingsDIV:last-of-type {
-                    margin-right: 0;
-                }
-
-                .SettingsDIV label {
-                    margin-right: 10px;
-                    width: 170px;
-                    display: inline-block;
-                }
-
-                .SettingsDIV form > div {
-                    line-height: 25px;
-                    margin-bottom: 10px;
-                }
-                .SettingsDIV h4 {
-                    font-weight: bold;
-                    margin-bottom: 25px;
-                }
-
-            </style>
     </body>
 </html>

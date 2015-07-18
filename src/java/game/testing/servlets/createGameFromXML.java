@@ -53,7 +53,7 @@ public class createGameFromXML extends HttpServlet {
             }
 
             try {
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 service.createGameFromXML(data);
                 response.sendRedirect("../create.html?status=Sucess&message=Created A Game!");
             } catch (Exception e) {

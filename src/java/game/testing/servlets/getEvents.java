@@ -60,7 +60,7 @@ public class getEvents extends HttpServlet {
             int playerID = GameUtils.getPlayerID(request);
 
             try {
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 List<Event> events = service.getEvents(lastID, playerID);
                 out.println(new Gson().toJson(events));
             } catch (Exception e) {

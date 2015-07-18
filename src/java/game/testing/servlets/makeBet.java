@@ -17,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.annotation.XmlEnumValue;
 import org.apache.catalina.tribes.util.Arrays;
 import server.json.JsonMessage;
 import ws.roulette.BetType;
@@ -44,28 +45,28 @@ public class makeBet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             try {
 //                {'playername': playername, 'amount': amount, 'betType': betType, 'numbers': numbers}
-                
-                if (GameUtils.isUserPlaying(request) != true){
+
+                if (GameUtils.isUserPlaying(request) != true) {
                     out.println(new JsonMessage(JsonMessage.Status.Error, "user is not playing."));
                     return;
                 }
-                
+
                 int amount = Integer.parseInt(request.getParameter("amount"));
-                ws.roulette.BetType betType =  ws.roulette.BetType.fromValue(request.getParameter("betType"));
-                
+                ws.roulette.BetType betType = getBetType(request.getParameter("betType"));
+//                ws.roulette.BetType betType = ws.roulette.BetType.valueOf(request.getParameter("betType"));
                 ArrayList<Integer> numbers = new ArrayList<>();
-                if (request.getParameter("numbers") != ""){
+                if (request.getParameter("numbers").equals("") == false) {
                     String[] split = request.getParameter("numbers").split(",");
                     for (String num : split) {
                         numbers.add(Integer.parseInt(num));
                     }
                 }
-                
-                RouletteWebService service = RouletteService.getService();
+
+                RouletteWebService service = RouletteService.getService(request);
                 service.makeBet(amount, betType, numbers, GameUtils.getPlayerID(request));
-                
+
                 out.println(new JsonMessage(JsonMessage.Status.Success, ""));
-                
+
             } catch (Exception e) {
                 out.println(new JsonMessage(JsonMessage.Status.Error, e.getMessage()));
             }
@@ -110,5 +111,24 @@ public class makeBet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private BetType getBetType(String name) throws Exception {
+
+        if (name.startsWith("COLUMN") == true) {
+            switch (name) {
+                case "COLUMN_1":
+                    return BetType.COLUMN_1;
+                case "COLUMN_2":
+                    return BetType.COLUMN_2;
+
+                case "COLUMN_3":
+                    return BetType.COLUMN_3;
+                default:
+                    throw new Exception("Invalid bet name.");
+            }
+        } else {
+            return ws.roulette.BetType.valueOf(name);
+        }
+    }
 
 }

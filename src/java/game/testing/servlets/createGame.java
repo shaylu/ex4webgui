@@ -6,13 +6,6 @@
 package game.testing.servlets;
 
 import game.Constsants;
-import static game.servlets.newgame.COMP_PLAYERS_FIELD;
-import static game.servlets.newgame.GAME_NAME_FIELD;
-import static game.servlets.newgame.HUMAN_PLAYERS_FIELD;
-import static game.servlets.newgame.INIT_MONEY_FIELD;
-import static game.servlets.newgame.MAX_BETS_FIELD;
-import static game.servlets.newgame.MIN_BETS_FIELD;
-import static game.servlets.newgame.ROULETTE_TYPE_FIELD;
 import game.util.RouletteService;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -78,7 +71,7 @@ public class createGame extends HttpServlet {
             }
 
             try {
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 service.createGame(computerPlayers, humanPlayers, initMoney, maxBets, minBets, name, type);
             } catch (Exception e) {
                 message = new JsonMessage(JsonMessage.Status.Error, e.getMessage());

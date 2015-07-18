@@ -18,10 +18,10 @@ import ws.roulette.GameStatus;
  */
 public class GameUtils {
 
-    public static boolean canJoinGame() {
+    public static boolean canJoinGame(HttpServletRequest request) {
         boolean res = true;
         try {
-            GameDetails gameDetails = RouletteService.getService().getGameDetails("");
+            GameDetails gameDetails = RouletteService.getService(request).getGameDetails("");
             if (gameDetails == null) {
                 res = false;
             } else if (gameDetails.getStatus() == GameStatus.ACTIVE || gameDetails.getStatus() == GameStatus.FINISHED) {

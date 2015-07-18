@@ -48,7 +48,7 @@ public class getJoinForm extends HttpServlet {
             try {
                 String res;
                 String gameName = request.getParameter("gameName");
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
 
                 GameDetails gameDetails = service.getGameDetails(gameName);
                 if (gameDetails.getStatus() == GameStatus.WAITING) {

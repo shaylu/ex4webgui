@@ -18,23 +18,15 @@ var $eventsIntervals;
 var $lastHandledEvent = 0;
 var $gameAreaHTML;
 var $isBoardInitialized = false;
-//
-//var game = new GameData($logTextarea);
-//var timer = undefined;
-//var eventsIntervals;
-
 var getCurrentPlayer = function () {
     return $playerName;
 };
-
 var getRouletteType = function () {
     return $rouletteType;
 };
-
 var getRotateDegree = function (num) {
     var american = [181, 11, 190, 48, 228, 87, 266, 124, 303, 162, 341, 134, 314, 20, 199, 58, 238, 95, 274, 294, 115, 256, 77, 218, 39, 331, 152, 350, 172, 322, 143, 285, 104, 247, 67, 209, 29, 0];
     var french = [0, 135, 302, 20, 321, 174, 263, 60, 204, 96, 185, 225, 40, 244, 116, 341, 154, 283, 77, 332, 125, 312, 87, 195, 165, 293, 11, 254, 50, 68, 214, 106, 351, 144, 273, 31, 234];
-
     var type = getRouletteType();
     if (type === 'AMERICAN') {
         return american[num];
@@ -43,16 +35,13 @@ var getRotateDegree = function (num) {
         return french[num];
     }
 };
-
 function TimeSpan(ghours, gminutes, gseconds) {
     this.hours = ghours;
     this.minutes = gminutes;
     this.seconds = gseconds;
-
     this.tickDown = function () {
         if (this.hours === 0 && this.minutes === 0 && this.seconds === 0)
             return;
-
         if (this.seconds - 1 >= 0)
         {
             this.seconds = this.seconds - 1;
@@ -75,7 +64,6 @@ function TimeSpan(ghours, gminutes, gseconds) {
         var seconds;
         var minutes;
         var hours;
-
         if (this.seconds < 10) {
             seconds = '0' + this.seconds;
         }
@@ -105,37 +93,19 @@ function Timer(millseconds, div) {
     this.div = div;
     this.timespan = new TimeSpan(0, 0, millseconds / 1000);
     this.intervals = undefined;
-
     this.start = function () {
         var tick = function () {
             $timer.timespan.tickDown();
             $($timer.div).text($timer.timespan.getTimeString());
         };
-
         this.intervals = setInterval(function () {
             tick();
         }, 1000);
     };
-
     this.stop = function () {
         clearInterval(this.intervals);
     };
 }
-
-
-//function Player(playerName, playerMoney) {
-//    this.name = playerName;
-//    this.money = playerMoney;
-//    this.updateMoneyOnUI = function (newAmount) {
-//        var player = this;
-//        var moneyDiv = $(".player[name='" + player.name + "'] .playerMoney");
-//        moneyDiv.text(newAmount);
-//    };
-//    this.disable = function () {
-//        var player = this;
-//        var playerDiv = $(".player[name='" + player.name + "']").addClass("player-resigned");
-//    };
-//}
 
 var log = function (text) {
 
@@ -143,7 +113,6 @@ var log = function (text) {
     if ($logTextarea.length)
         $logTextarea.scrollTop($logTextarea[0].scrollHeight - $logTextarea.height());
 };
-
 var getEvents = function () {
     var url = 'tests/getEvents';
     $.ajax({
@@ -165,7 +134,6 @@ var processEvents = function (events) {
         processEvent(events[i]);
     }
 };
-
 processEvent = function (event) {
     var type = event.type;
     switch (type) {
@@ -201,19 +169,15 @@ processEvent = function (event) {
             break;
     }
 };
-
 var playerFinishedBetting = function (event) {
     var name = event.playerName;
     log("'" + name + "' finished betting.");
 };
-
 var startTimer = function (millsec) {
     stopTimer();
-
     $timer = new Timer(millsec, $timerSpan);
     $timer.start();
 };
-
 var stopTimer = function () {
     if ($timer === undefined) {
         return;
@@ -221,21 +185,18 @@ var stopTimer = function () {
 
     $timer.stop();
 };
-
 var enableBetting = function () {
     $('.game-table').css('opacity', '1');
     $('.hotspot').droppable("option", "disabled", false);
     $('#btnResign').prop("disabled", false);
     $('#btnQuit').prop("disabled", false);
 };
-
 var disableBetting = function () {
     $('.game-table').css('opacity', '0.5');
     $('.hotspot').droppable("option", "disabled", true);
     $('#btnResign').prop("disabled", true);
     $('#btnQuit').prop("disabled", true);
 };
-
 var gameStarted = function (event) {
     // get players panel
     var url = 'tests/getPlayersPanel';
@@ -255,25 +216,21 @@ var gameStarted = function (event) {
         startRound(event);
     }
 };
-
 var startRound = function (event) {
     log('Round started.');
     removeAllCoins();
     enableBetting();
     startTimer(event.timeout);
 };
-
 var removeAllCoins = function () {
     $('.coin.bet').remove();
 };
 var gameOver = function () {
     clearInterval($eventsIntervals);
     stopTimer();
-
     showScoreBoard();
     signout();
 };
-
 var showScoreBoard = function () {
     var url = 'tests/getScoreBoard';
     $.ajax({url: url}).success(function (data) {
@@ -283,14 +240,12 @@ var showScoreBoard = function () {
         window.location = 'index.html';
     });
 };
-
 var signout = function () {
     var url = 'tests/leaveGame';
     $.ajax({url: url}).success(function (data) {
         // nothing
     });
 };
-
 var getRotationDegrees = function (obj) {
     var matrix = obj.css("-webkit-transform") ||
             obj.css("-moz-transform") ||
@@ -307,48 +262,33 @@ var getRotationDegrees = function (obj) {
     }
     return (angle < 0) ? angle + 360 : angle;
 };
-
 var winningNumber = function (winningNumber) {
     stopTimer();
     disableBetting();
-
     // turn wheel 
-
-    var degCurr = getRotationDegrees($rouletteImage);
-    var degree = getRotateDegree(winningNumber);
-    var degStr = ((360 - degCurr) + degree) + 'deg';
-
-    $rouletteImage.animate({'rotate': degStr}, 1000);
-    degStr = '0deg';
-//    $rouletteImage.delay(3000).animate({'rotate': degStr}, 500);
-
+    var degree = 360 + getRotateDegree(winningNumber);
+    $($rouletteImage).transition({rotate: degree}, 2000, 'in');
     log("Winning number is: " + winningNumber);
-    // clear all bets
 };
-
 var setPlayerMoney = function (playerName, money) {
     var player = $('.players').find("[name='" + playerName + "']");
     $(player).children('.playerMoney').text(money);
 };
-
 var getPlayerMoney = function (playerName) {
     var player = $('.players').find("[name='" + playerName + "']");
     return $(player).children('.playerMoney').text();
 };
-
 var disablePlayer = function (playerName) {
     var player = $('.players').find("[name='" + playerName + "']");
     player.css('opacity', '0.5');
 };
-
 var playerWon = function (winningdata) {
     var name = winningdata.playerName;
     var earned = winningdata.amount;
     var newAmount = parseInt(getPlayerMoney(name)) + parseInt(earned);
     setPlayerMoney(name, newAmount);
-    log("'" + player.name + "' has won $" + earned + ".");
+    log("'" + name + "' has won $" + earned + ".");
 };
-
 var playerResigned = function (resigndata) {
     var name = resigndata.playerName;
     disablePlayer(name);
@@ -360,27 +300,6 @@ var playerBet = function (betdata) {
     setPlayerMoney(name, newAmount);
     log("'" + betdata.playerName + "' placed a '" + betdata.betType + "' bet of $" + betdata.amount);
 };
-var createPlayersOnUI = function (players) {
-    for (var i = 0, max = players.length; i < max; i++) {
-        var player = players[i];
-        var html = HTMLHelper.playerHTML(player);
-        $playersDiv.append(html);
-    }
-};
-var HTMLHelper = {
-    playerHTML: function (player) {
-        var result = "";
-        result += "<div class='player' name='" + player.name + "'>";
-        result += " <div class='playerName'>" + player.name + "</div>";
-        result += " <div class='playerMoney'>" + player.money + "</div>";
-        result += "<div>";
-        return result;
-    },
-    scoreBoardHTML: function (gamedata) {
-
-    }
-};
-
 var resign = function () {
     var url = 'tests/resign';
     $.ajax({url: url}).success(function (data) {
@@ -397,11 +316,9 @@ var resign = function () {
         return false;
     });
 };
-
 var makeBet = function (playername, coin, amount, betType, numbers) {
     var url = 'tests/makeBet';
     log('trying to place a bet for ' + betType + " of $" + amount);
-
     $.ajax({url: url, data: {'amount': amount, 'betType': betType, 'numbers': numbers}}).success(function (data) {
         if (data.status === 'Error') {
             $(coin).remove();
@@ -412,24 +329,19 @@ var makeBet = function (playername, coin, amount, betType, numbers) {
         alert('Failed to place your bet.');
     });
 };
-
 var showWaitingForGameToStart = function () {
     $($gameArea).html("Plaese wait for game to start....");
 };
-
 var showGameAreaWhenGameStarts = function () {
     $('.waiting-area').hide();
     ($gameArea).show();
 };
-
 var clonethis = function () {
     return $(this).clone().addClass('bet');
     $.ui.ddmanager.current.cancelHelperRemoval = true;
 };
-
 var finishBetting = function () {
     var url = 'tests/finishBetting';
-
     $.ajax({url: url}).success(function (data) {
         if (data.status === 'Error') {
             alert('Failed to finish betting, ' + data.message);
@@ -438,7 +350,6 @@ var finishBetting = function () {
         alert('Failed to finish betting.');
     });
 };
-
 $(function () {
     $players = $('.players');
     $logTextarea = $('#txtLog');
@@ -448,7 +359,6 @@ $(function () {
     $gameName = $('.game-area').data('gamename');
     $playerName = $('.game-area').data('playername');
     $rouletteType = $('.game-area').data('roulettetype');
-
     $('.coin').draggable({helper: clonethis, revert: 'invalid'});
     $('.hotspot').droppable({
         drop: function (event, ui) {
@@ -456,11 +366,9 @@ $(function () {
             var bettype = $(spot).data("bettype");
             var numbers = $(spot).data("numbers");
             $.ui.ddmanager.current.cancelHelperRemoval = true;
-
             var coin = ui.helper;
             var money = $(coin).data('amount');
             var playername = getCurrentPlayer();
-
             makeBet(playername, coin, money, bettype, numbers);
         }
     });
@@ -471,27 +379,23 @@ $(function () {
 
     $('#btnQuit').click(function () {
         resign();
-        $.delay(3000, function () {
+        signout();
+        setTimeout(function () {
             window.location = 'index.html';
-        });
+        }, 1000);
     });
-
+    
     $(document).on('click', '.home-button', function () {
         window.location = 'index.html';
     });
-
+    
     $('#btnFinishBetting').click(function () {
         finishBetting();
     });
-
-//
-//    $gameAreaHTML = $($gameArea).html();
-//    showWaitingForGameToStart();
-
+    
     $eventsIntervals = setInterval(function () {
         getEvents();
     }, 1000);
-
-
+    
 });
 

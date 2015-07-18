@@ -55,7 +55,7 @@ public class joinGame extends HttpServlet {
                     return;
                 }
 
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 int id = service.joinGame(gameName, playerName);
                 session.setAttribute(Constsants.SESSION_PLAYER_NAME, playerName);
                 session.setAttribute(Constsants.SESSION_PLAYER_ID, id);

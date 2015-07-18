@@ -8,16 +8,18 @@ and open the template in the editor.
     Author     : Shay
 */
 
-.results {
-    border: 5px solid #efefef;
-    padding: 50px;
+#lblTimer {
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: white;
+    border: 0;
+    border-radius: 5px;
+    color: black;
+    font-size: 14pt;
+    font-weight: bold;
+    padding: 10px;
 }
 
-.result {
-    line-height: 30px;
-    font-size: 12pt;
-    border-bottom: 1px solid #efefef;
-}
 
 div.game-table, div.roulette-container {
     display: inline;
@@ -26,8 +28,20 @@ div.game-table, div.roulette-container {
 
 textarea {
     width: 100%;
-    height: 200px;
+    height: 150px;
     padding: 10px;
+    
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    border: 0;
+    color: #4cae4c;
+    background-color: black;
+    border-radius: 10px;
+    font-weight: bold;
+    
 }
 .gap {
     height: 50px;
@@ -40,27 +54,29 @@ textarea {
 .roulette-container{
     padding: 0;
     margin: 0;
+    position: relative;
+    vertical-align: top;
+    text-align: left;
 }
 
 img.roulette {
     height: 255px;
     width: 255px;
-    position: relative;
-    /*float: left;*/
+    z-index: 2;
 
+    transition:  rotate;
 }
 .ball {
-    position: relative;
+    position: absolute;
     z-index: 3;
-    top: 59px;
-    left: 137px;
-    float: left;
+    top: 59px; 
+    left: 119px; 
 }
 
 .column {
     display: inline-block;
     vertical-align: top;
-    /* float: left; */
+    text-align: left;
 }
 
 .player {
@@ -159,15 +175,28 @@ div.ExtraButtons:not(:first-child) {
 .game-controls-area{
     vertical-align: top;
     text-align: center;
-    height: 50px
-
+    padding-top: 20px;
+    padding-bottom: 10px;
+    background-color: #183e18;
 }
 
 
 .game-controls-area button{
     text-align: center;
-    width: 70px;
-    height: 100%;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    border: 0;
+    color: black;
+    background-color: #4cae4c;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.game-controls-area button:hover{
+    background-color: white;
 }
 
 .coins,.coin-box,.coin {
@@ -175,15 +204,58 @@ div.ExtraButtons:not(:first-child) {
 }
 .coins {
     height: 50px;
+    margin-right: 20px;
 }
 .coin-box {
     width: 50px;
     text-align: center;
     vertical-align: middle;
+    margin-left: 5px;
+    margin-right: 5px;
+    color: white;
 
 }
 
 div.game-table div.roulette-container {
     display: inline;
     background-color: black;
+}
+
+.roulette-container {
+    margin-left: 25px;
+}
+
+.game-table-area {
+    text-align: center;
+    background-color: #4cae4c;
+    padding:  20px;
+}
+
+.game-table-area > div {
+    display: inline;
+}
+
+.home-button {
+
+    width: 200px;
+    height: 30px;
+
+}
+
+.home-button-area {
+    padding-top: 10px;
+    text-align: center;
+}
+
+
+.results, .waiting-area {
+    border: 5px solid #efefef;
+    padding: 50px;
+    background-color: white;
+}
+
+.result {
+    line-height: 30px;
+    font-size: 12pt;
+    border-bottom: 1px solid #efefef;
 }

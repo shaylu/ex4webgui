@@ -94,7 +94,7 @@ public class getScoreBoard extends HttpServlet {
     }// </editor-fold>
 
     private String getScoreBoardHTML(HttpServletRequest request) throws Exception {
-        RouletteWebService service = RouletteService.getService();
+        RouletteWebService service = RouletteService.getService(request);
         List<PlayerDetails> playersDetails = service.getPlayersDetails(GameUtils.getGameName(request));
         PlayerDetails[] sorted = playersDetails.stream().sorted((p1, p2) -> Integer.compare(p2.getMoney(),p1.getMoney())).toArray(PlayerDetails[]::new);
         
@@ -108,7 +108,7 @@ public class getScoreBoard extends HttpServlet {
         }
         
         res += "</div>";
-        res += "<div><button class='home-button'>Home</button></div>";
+        res += "<div class='home-button-area'><button class='home-button'>Home</button></div>";
         res += "</div>";
         
         return res;

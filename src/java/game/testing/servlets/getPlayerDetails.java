@@ -47,7 +47,7 @@ public class getPlayerDetails extends HttpServlet {
             
             try {
                 int id = Integer.parseInt(request.getParameter("id"));
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 PlayerDetails playerDetails = service.getPlayerDetails(id);
                 out.println(new Gson().toJson(playerDetails));
             } catch (Exception e) {

@@ -48,7 +48,7 @@ public class finishBetting extends HttpServlet {
 
             try {
                 int id = GameUtils.getPlayerID(request);
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 service.finishBetting(id);
                 out.println(new JsonMessage(JsonMessage.Status.Success, ""));
             } catch (Exception e) {

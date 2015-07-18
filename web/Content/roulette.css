@@ -7,18 +7,19 @@ and open the template in the editor.
     Created on : Jul 8, 2015, 7:25:43 PM
     Author     : Dell
 */
+
+
 * {
     box-sizing: border-box;
 }
 html {
     height: 100%;
+    width: 100%;
 }
 body {
-    font-family: Arial;
+    font-family: 'PT Sans', sans-serif;
     background-image: url('../Images/bg.jpg');
     background-size: cover;
-    width: 100%;
-    height: 100%;
     margin: 0;
     padding: 0;
 }
@@ -28,13 +29,17 @@ body {
     background: rgba(0,0,0,0.65);
     width: calc(100% - 100px);
     height: calc(100% - 100px) !important;
-    vertical-align: middle;
+    /* vertical-align: middle; */
     overflow: auto;
     padding: 50px
 }
 
-.container {
+#refreshWaitingGamesList {
+    float: right;
 }
+
+
+
 label {
     margin-right: 10px;
 }
@@ -57,3 +62,81 @@ label {
 .waiting-games-area li.clicked {
     background-color: #efefef;
 }
+
+.customPanel {
+    border: 5px solid #efefef;
+    padding: 50px;
+    background-color: white;
+}
+
+ul.menu {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+ul.menu li.menu-item {
+    margin-right: 10px;
+    padding: 20px;
+
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+
+}
+
+ul.menu li.menu-item a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+ul.menu li.menu-item a:hover {
+    color: #4cae4c;
+}
+
+#txtPlayerName {
+    margin-right: 5px;
+    margin-bottom: 2px;
+}
+
+.SettingsDIV {
+    padding: 10px;
+    width: 50%;
+    display: inline-block;
+    float: left;
+    box-sizing: border-box;
+    color: white;
+}
+
+.SettingsDIV input, select {
+    color: black;
+}
+
+.SettingsDIV input[type='text'], select, input[type='number'], input[type='file']{
+    width: 150px;
+    padding: 3px;
+    margin: 0px;
+    background-color: white;
+
+}
+
+.SettingsDIV:last-of-type {
+    margin-right: 0;
+}
+
+.SettingsDIV label {
+    margin-right: 10px;
+    width: 170px;
+    display: inline-block;
+}
+
+.SettingsDIV form > div {
+    line-height: 25px;
+    margin-bottom: 10px;
+}
+.SettingsDIV h4 {
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+

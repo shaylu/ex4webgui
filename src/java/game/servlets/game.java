@@ -96,7 +96,7 @@ public class game extends HttpServlet {
     private String getGameHTML(HttpServletRequest request) throws Exception {
         String gameName = GameUtils.getGameName(request);
         String playerName = GameUtils.getPlayerName(request);
-        RouletteWebService service = RouletteService.getService();
+        RouletteWebService service = RouletteService.getService(request);
         GameDetails gameDetails = service.getGameDetails(gameName);
         RouletteType rouletteType = gameDetails.getRouletteType();
 
@@ -111,9 +111,10 @@ public class game extends HttpServlet {
 
         String HTML = "";
         HTML += getTopHTML();
-        HTML += "   <div class='container'>"
+        HTML += "  <div class='wrapper'>"
+                + "<div class='container'>"
                 + "     <div class='waiting-area'>Waiting for game to start...</div>"
-                + "     <div class='game-area' style='dispaly: none' data-playername='" + playerName + "' data-roulettetype='" + rouletteType + "' data-gamename='" + gameName + "'>"
+                + "     <div class='game-area' style='display: none' data-playername='" + playerName + "' data-roulettetype='" + rouletteType + "' data-gamename='" + gameName + "'>"
                 + "         <div class='row'>"
                 + "             <div class='panel panel-default'>"
                 + "                 <div class='panel-heading players'>"
@@ -126,11 +127,11 @@ public class game extends HttpServlet {
                 + "             " + roulette
                 + "         </div>"
                 + "         <div class='row'>"
-                + "             <div class='panel panel-default'>"
+                + "             <div>"
                 + "                 <div class='panel-body game-controls-area'>"
                 + "                     " + timer
-                + "                     " + finishBettingButton
                 + "                     " + chips
+                + "                     " + finishBettingButton
                 + "                     " + resignButton
                 + "                     " + quitButton
                 + "                 </div>"
@@ -144,7 +145,8 @@ public class game extends HttpServlet {
                 + "             </div>"
                 + "         </div>"
                 + "     </div>"
-                + " </div>";
+                + " </div>"
+                + "</div>";
         HTML += getScriptsHTML();
         HTML += getFooterHTML();
 
@@ -153,7 +155,7 @@ public class game extends HttpServlet {
 
     private String createRoulette(RouletteType rouletteType) {
         String rouletteImage = (rouletteType == RouletteType.FRENCH) ? "frenchRoulette.gif" : "americanRoulette.gif";
-        return "<div class='roulette-container'><img class='roulette' src='Images/" + rouletteImage + "' /><img class='ball' src='Images/ball.png' /></div>";
+        return "<div class='roulette-container'><span><img class='roulette' src='Images/" + rouletteImage + "' /><img class='ball' src='Images/ball.png' /></span></div>";
     }
 
     private String createChipsArea() {
@@ -175,7 +177,7 @@ public class game extends HttpServlet {
                 + "<head>"
                 + "<title>Roulette Game</title>"
                 + "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-                + "<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>"
+                + "<link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>"
                 + "<link href='Content/bootstrap.css' rel='stylesheet' type='text/css'/>"
                 + "<link href='Content/GameSceneStyleSheet.css' rel='stylesheet' type='text/css'/>"
                 + "<link href='Content/roulette.css' rel='stylesheet' type='text/css'/>"
@@ -189,10 +191,9 @@ public class game extends HttpServlet {
         String res = "";
         res += "<script src='Scripts/jquery-2.1.4.js' type='text/javascript'></script>";
         res += "<script src='Scripts/jquery-ui.min.js' type='text/javascript'></script>";
-        res += "<script src='Scripts/qtransform.js' type='text/javascript'></script>";
+        res += "<script src='Scripts/jquery.transit.min.js' type='text/javascript'></script>";
         res += "<script src='Scripts/bootstrap.js' type='text/javascript'></script>";
         res += "<script src='Scripts/jquery.rotate.1-1.js' type='text/javascript'></script>";
-//        res += "<script src='Scripts/GameTimer.js' type='text/javascript'></script>";
         res += "<script src='Scripts/GameScene.js' type='text/javascript'></script>";
         return res;
     }

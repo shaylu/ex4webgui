@@ -46,7 +46,7 @@ public class getPlayersDetails extends HttpServlet {
                     throw new Exception("game name not given.");
                 
                 String gameName = request.getParameter("name");
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 List<PlayerDetails> playersDetails = service.getPlayersDetails(gameName);
                 out.println(new Gson().toJson(playersDetails));
             } catch (Exception e) {

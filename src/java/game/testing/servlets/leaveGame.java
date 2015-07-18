@@ -39,7 +39,7 @@ public class leaveGame extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             try {
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 service.resign(GameUtils.getPlayerID(request));
             } catch (Exception e) {
             }

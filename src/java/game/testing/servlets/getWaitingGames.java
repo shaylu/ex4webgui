@@ -40,7 +40,7 @@ public class getWaitingGames extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             try {
-                RouletteWebService service = RouletteService.getService();
+                RouletteWebService service = RouletteService.getService(request);
                 List<String> waitingGames = service.getWaitingGames();
                 out.println(new Gson().toJson(waitingGames));
             } catch (Exception e) {

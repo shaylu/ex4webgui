@@ -9,6 +9,7 @@ and open the template in the editor.
         <title>Roulette</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
         <link href="Content/bootstrap.css" rel="stylesheet" type="text/css"/>
         <link href="Content/roulette.css" rel="stylesheet" type="text/css"/>
     </head>
@@ -16,17 +17,21 @@ and open the template in the editor.
         <div class="wrapper">
             <div class="container">
                 <div class="row">
-                    <div class="navbar navbar-default navbar-static-top">
-                        <div class="container">
-                            <ul class="navbar navbar-nav nav">
-                                <li><a class="nav" href="create.html">Create new game</a></li>
-                            </ul>
-                        </div>
+                    <div class="container customPanel">
+                        <h3>Welcome to Roulette!</h3>
+                        <p>You can create a game by simply clicking on the create game menu item.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container">
+                        <ul class="menu">
+                            <li class="menu-item"><a class="nav" href="create.html">CREATE NEW GAME</a></li>
+                        </ul>
                     </div>
                 </div>
                 <div class="row">
                     <div class='waiting-games-area panel panel-default'>
-                        <div class="container-fluid panel-heading"><button id='refreshWaitingGamesList'>Refresh</button></div>
+                        <div class="container-fluid panel-heading"><span>Join a game by clicking on its name.</span><button id='refreshWaitingGamesList'>Refresh</button></div>
                         <div class='list panel-body'>
                         </div>
                     </div>
