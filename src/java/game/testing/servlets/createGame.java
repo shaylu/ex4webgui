@@ -58,7 +58,7 @@ public class createGame extends HttpServlet {
 
             try {
                 name = request.getParameter(GAME_NAME_FIELD);
-                type = RouletteType.fromValue(request.getParameter(ROULETTE_TYPE_FIELD));
+                type = RouletteType.fromValue(request.getParameter(ROULETTE_TYPE_FIELD).toUpperCase());
                 humanPlayers = Integer.parseInt(request.getParameter(HUMAN_PLAYERS_FIELD));
                 computerPlayers = Integer.parseInt(request.getParameter(COMP_PLAYERS_FIELD));
                 initMoney = Integer.parseInt(request.getParameter(INIT_MONEY_FIELD));

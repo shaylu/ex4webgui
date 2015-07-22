@@ -177,7 +177,7 @@ public class game extends HttpServlet {
                 + "<head>"
                 + "<title>Roulette Game</title>"
                 + "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-                + "<link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>"
+//                + "<link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>"
                 + "<link href='Content/bootstrap.css' rel='stylesheet' type='text/css'/>"
                 + "<link href='Content/GameSceneStyleSheet.css' rel='stylesheet' type='text/css'/>"
                 + "<link href='Content/roulette.css' rel='stylesheet' type='text/css'/>"
